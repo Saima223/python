@@ -1,0 +1,1430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python for Data Analysts — 2 Month Curriculum</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f0f0f;
+    --surface: #161616;
+    --surface2: #1e1e1e;
+    --surface3: #252525;
+    --border: #2a2a2a;
+    --border2: #333;
+    --text: #e8e4dc;
+    --text2: #9a9690;
+    --text3: #5a5652;
+    --accent: #c8a96e;
+    --accent2: #e8c98e;
+    --green: #6db87a;
+    --green-bg: #1a2e1d;
+    --blue: #6ba3c8;
+    --blue-bg: #1a2535;
+    --purple: #9b8fd4;
+    --purple-bg: #211e35;
+    --orange: #d4845a;
+    --orange-bg: #2e1e15;
+    --teal: #5ab8b0;
+    --teal-bg: #152928;
+    --red: #c86b6b;
+    --red-bg: #2e1515;
+    --font: 'DM Sans', sans-serif;
+    --mono: 'DM Mono', monospace;
+    --serif: 'Fraunces', serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  /* ── Layout ── */
+  .app { display: flex; min-height: 100vh; }
+
+  .sidebar {
+    width: 260px;
+    min-width: 260px;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  .sidebar-header {
+    padding: 24px 20px 16px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+
+  .logo {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 20px;
+    color: var(--accent);
+    margin-bottom: 4px;
+  }
+
+  .logo-sub {
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .progress-wrap {
+    padding: 12px 20px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--text3);
+    margin-bottom: 6px;
+  }
+
+  .progress-bar {
+    height: 3px;
+    background: var(--border2);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--green));
+    border-radius: 2px;
+    transition: width 0.4s ease;
+  }
+
+  .phase-nav {
+    overflow-y: auto;
+    flex: 1;
+    padding: 8px 0;
+  }
+
+  .phase-nav::-webkit-scrollbar { width: 4px; }
+  .phase-nav::-webkit-scrollbar-track { background: transparent; }
+  .phase-nav::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+  .phase-section { margin-bottom: 4px; }
+
+  .phase-btn {
+    width: 100%;
+    padding: 8px 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text2);
+    font-family: var(--font);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-align: left;
+    transition: color 0.15s;
+  }
+
+  .phase-btn:hover { color: var(--text); }
+  .phase-btn.active { color: var(--accent); }
+
+  .phase-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .week-item {
+    padding: 6px 20px 6px 36px;
+    cursor: pointer;
+    font-size: 12px;
+    color: var(--text3);
+    transition: color 0.15s, background 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .week-item:hover { color: var(--text2); background: var(--surface2); }
+  .week-item.active { color: var(--text); background: var(--surface2); }
+
+  .week-check {
+    width: 14px; height: 14px;
+    border-radius: 3px;
+    border: 1px solid var(--border2);
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 9px;
+  }
+
+  .week-check.done { background: var(--green); border-color: var(--green); color: #0f1a11; }
+
+  /* ── Main ── */
+  .main {
+    flex: 1;
+    overflow-y: auto;
+    padding: 40px;
+    max-width: 900px;
+  }
+
+  .main::-webkit-scrollbar { width: 6px; }
+  .main::-webkit-scrollbar-track { background: transparent; }
+  .main::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+
+  /* ── Phase header ── */
+  .phase-header {
+    margin-bottom: 32px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .phase-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text3);
+    margin-bottom: 8px;
+  }
+
+  .phase-title {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 36px;
+    font-weight: 300;
+    color: var(--text);
+    margin-bottom: 10px;
+    line-height: 1.2;
+  }
+
+  .phase-desc {
+    font-size: 14px;
+    color: var(--text2);
+    max-width: 600px;
+    line-height: 1.7;
+  }
+
+  .phase-stats {
+    display: flex;
+    gap: 24px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+  }
+
+  .phase-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .phase-stat-val {
+    font-size: 22px;
+    font-weight: 300;
+    color: var(--accent);
+    font-family: var(--mono);
+  }
+
+  .phase-stat-label {
+    font-size: 11px;
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  /* ── Week block ── */
+  .week-block {
+    margin-bottom: 48px;
+  }
+
+  .week-header {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+
+  .week-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 0.06em;
+  }
+
+  .week-title {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  .week-tag {
+    font-size: 10px;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 20px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-left: auto;
+  }
+
+  /* ── Day card ── */
+  .day-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 12px;
+    overflow: hidden;
+    transition: border-color 0.15s;
+  }
+
+  .day-card:hover { border-color: var(--border2); }
+  .day-card.open { border-color: var(--border2); }
+
+  .day-card-header {
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .day-number {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text3);
+    min-width: 44px;
+    flex-shrink: 0;
+  }
+
+  .day-topic {
+    flex: 1;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  .day-badge {
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-weight: 500;
+    flex-shrink: 0;
+    letter-spacing: 0.03em;
+  }
+
+  .day-chevron {
+    color: var(--text3);
+    font-size: 10px;
+    transition: transform 0.2s;
+    flex-shrink: 0;
+  }
+
+  .day-card.open .day-chevron { transform: rotate(180deg); }
+
+  .day-body {
+    display: none;
+    padding: 0 20px 20px;
+    border-top: 1px solid var(--border);
+  }
+
+  .day-card.open .day-body { display: block; }
+
+  /* Tabs */
+  .tab-row {
+    display: flex;
+    gap: 4px;
+    padding: 14px 0 14px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+
+  .tab-btn {
+    padding: 4px 12px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: none;
+    font-family: var(--font);
+    font-size: 11px;
+    color: var(--text3);
+    cursor: pointer;
+    transition: all 0.15s;
+    font-weight: 500;
+    letter-spacing: 0.03em;
+  }
+
+  .tab-btn:hover { border-color: var(--border2); color: var(--text2); }
+  .tab-btn.active { background: var(--surface3); border-color: var(--border2); color: var(--text); }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* Topics list */
+  .topic-list { list-style: none; }
+
+  .topic-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+    color: var(--text2);
+  }
+
+  .topic-item:last-child { border-bottom: none; }
+
+  .topic-check-btn {
+    width: 16px; height: 16px;
+    border-radius: 4px;
+    border: 1px solid var(--border2);
+    background: none;
+    cursor: pointer;
+    flex-shrink: 0;
+    margin-top: 2px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 9px;
+    color: transparent;
+    transition: all 0.15s;
+  }
+
+  .topic-check-btn:hover { border-color: var(--accent); }
+  .topic-check-btn.done { background: var(--green); border-color: var(--green); color: #0f1a11; }
+
+  .topic-text { flex: 1; line-height: 1.5; }
+  .topic-text.done { text-decoration: line-through; color: var(--text3); }
+
+  /* Practical */
+  .practical-box {
+    background: var(--surface2);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 12px;
+  }
+
+  .practical-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+
+  .practical-text {
+    font-size: 13px;
+    color: var(--text2);
+    line-height: 1.7;
+  }
+
+  pre.code-block {
+    background: var(--surface3);
+    border-radius: 8px;
+    padding: 16px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text);
+    line-height: 1.8;
+    overflow-x: auto;
+    margin-top: 10px;
+    border: 1px solid var(--border);
+  }
+
+  .code-comment { color: #5a5652; }
+  .code-keyword { color: var(--purple); }
+  .code-string { color: var(--green); }
+  .code-num { color: var(--orange); }
+
+  /* QnA */
+  .qna-item { margin-bottom: 14px; }
+
+  .qna-q {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 4px;
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+  }
+
+  .qna-q-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--accent);
+    background: var(--orange-bg);
+    padding: 2px 6px;
+    border-radius: 4px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .qna-a {
+    font-size: 12px;
+    color: var(--text2);
+    line-height: 1.7;
+    padding-left: 40px;
+  }
+
+  .qna-code {
+    font-family: var(--mono);
+    background: var(--surface3);
+    padding: 6px 10px;
+    border-radius: 5px;
+    font-size: 11px;
+    display: block;
+    margin-top: 4px;
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+
+  /* Assignment */
+  .assignment-card {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: 12px;
+    padding: 28px 32px;
+    margin-top: 48px;
+    margin-bottom: 12px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .assignment-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--green), var(--blue));
+  }
+
+  .assignment-eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+
+  .assignment-title {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 22px;
+    color: var(--text);
+    margin-bottom: 12px;
+    font-weight: 300;
+  }
+
+  .assignment-desc {
+    font-size: 13px;
+    color: var(--text2);
+    line-height: 1.8;
+    margin-bottom: 16px;
+  }
+
+  .assignment-tasks { list-style: none; }
+
+  .assignment-task {
+    display: flex;
+    gap: 10px;
+    padding: 7px 0;
+    font-size: 13px;
+    color: var(--text2);
+    border-bottom: 1px solid var(--border);
+    align-items: flex-start;
+    line-height: 1.5;
+  }
+
+  .assignment-task:last-child { border-bottom: none; }
+
+  .task-num {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--accent);
+    min-width: 20px;
+    padding-top: 2px;
+  }
+
+  /* Badges by phase */
+  .badge-py { background: #1a2535; color: var(--blue); }
+  .badge-np { background: var(--green-bg); color: var(--green); }
+  .badge-pd { background: var(--purple-bg); color: var(--purple); }
+  .badge-mp { background: var(--orange-bg); color: var(--orange); }
+  .badge-sq { background: var(--teal-bg); color: var(--teal); }
+  .badge-proj { background: var(--red-bg); color: var(--red); }
+
+  .tag-py { background: #1a2535; color: var(--blue); }
+  .tag-np { background: var(--green-bg); color: var(--green); }
+  .tag-pd { background: var(--purple-bg); color: var(--purple); }
+  .tag-mp { background: var(--orange-bg); color: var(--orange); }
+  .tag-sq { background: var(--teal-bg); color: var(--teal); }
+
+  .phase-dot-py { background: var(--blue); }
+  .phase-dot-np { background: var(--green); }
+  .phase-dot-pd { background: var(--purple); }
+  .phase-dot-mp { background: var(--orange); }
+  .phase-dot-sq { background: var(--teal); }
+
+  /* Misc */
+  .warn-inline {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--orange-bg);
+    color: var(--orange);
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 5px;
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+
+  .tip-inline {
+    background: var(--green-bg);
+    color: var(--green);
+    font-size: 12px;
+    padding: 10px 14px;
+    border-radius: 7px;
+    margin-top: 10px;
+    line-height: 1.6;
+    border-left: 2px solid var(--green);
+  }
+
+  .section-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 16px 0;
+  }
+
+  /* Mobile */
+  @media (max-width: 768px) {
+    .sidebar { display: none; }
+    .main { padding: 20px 16px; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- Sidebar -->
+<div class="sidebar">
+  <div class="sidebar-header">
+    <div class="logo">Python for Analysts</div>
+    <div class="logo-sub">2 months · 40 lectures · beginner</div>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-label">
+      <span>Progress</span>
+      <span id="prog-label">0 / 40</span>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="prog-fill" style="width:0%"></div>
+    </div>
+  </div>
+  <nav class="phase-nav" id="phase-nav"></nav>
+</div>
+
+<!-- Main -->
+<main class="main" id="main-content"></main>
+
+</div>
+
+<script>
+// ─────────────────────────────────────────────
+//  DATA
+// ─────────────────────────────────────────────
+const curriculum = [
+  {
+    id: 'phase1',
+    label: 'Phase 1 — Python',
+    color: 'py',
+    desc: 'Complete Python fundamentals. No jargon, no rush. Every concept tied to real data examples. By the end, students can write complete programs using variables, loops, conditions, collections, and functions.',
+    stats: [{ val:'3', label:'Weeks' }, { val:'15', label:'Lectures' }, { val:'1', label:'Project' }],
+    weeks: [
+      {
+        id:'w1', label:'Week 1', title:'Think like Python', tag:'py',
+        days: [
+          {
+            id:'d1', num:'Day 01', topic:'Data types + fixing the string/char confusion', badge:'py',
+            topics:['Python vs other tools — why analysts use it','Variables: dynamic typing, no declaration needed','5 core types: int, float, str, bool, None','type() function — inspect any value','The char fix: Python has NO char type','f-strings: f"Hello {name}"','print() and basic output'],
+            practical:'Create a "profile card" program. Store your name, age, city, GPA as variables. Print a formatted card using f-strings. Bonus: print your name in ALL CAPS using .upper()',
+            qna:[
+              {q:'Python has no char type — what is "a" then?', a:'It is a str of length 1. Run type("a") and type("hello") — both return <class "str">. Python simply does not distinguish.', code:null},
+              {q:'What is None?', a:'None means "no value" — like null in other languages. Type is NoneType. Used when a variable exists but has nothing in it yet.', code:'result = None\nprint(result is None)  # True'},
+              {q:'Why use f-strings instead of + for joining strings?', a:'Cleaner and handles type conversion automatically. "Age: " + age breaks if age is an int. f"Age: {age}" works always.', code:null},
+            ]
+          },
+          {
+            id:'d2', num:'Day 02', topic:'Variables, input() and string operations', badge:'py',
+            topics:['Variable naming rules (snake_case)','input() always returns a string — the #1 beginner bug','int(input()) and float(input()) conversions','String methods: upper, lower, strip, replace, split, title','len() — length of a string or list','String slicing: s[0:3], s[-1]'],
+            practical:'Name formatter: take a user\'s full name (may have extra spaces), their birth year. Print: clean Title Case name, their age (2025 - year), their initials, character count without spaces.',
+            qna:[
+              {q:'Why does input() + 10 throw a TypeError?', a:'input() returns a string always. "21" + 10 is str + int which Python cannot do. Convert first: int(input())', code:'age = int(input("Enter age: "))\nprint(age + 10)  # works'},
+              {q:'What does strip() do?', a:'Removes leading and trailing whitespace (spaces, tabs, newlines). Very common in data cleaning to fix messy text.', code:'"  hello  ".strip()  # "hello"'},
+              {q:'How do I check if a string contains a word?', a:'Use the in keyword. Returns True or False.', code:'"python" in "I love python"  # True'},
+            ]
+          },
+          {
+            id:'d3', num:'Day 03', topic:'Numbers, casting and operators', badge:'py',
+            topics:['int vs float — when division returns which','// floor division, ** power, % modulo','Casting: int(), float(), str(), round()','round() vs int() — important difference','Operator precedence: BODMAS still applies','f-string number formatting: :.2f, :,'],
+            practical:'Build a bill splitter: take total bill, number of people, tip %. Calculate tip amount, grand total, and per-person share. Format all outputs with ₹ and 2 decimal places.',
+            qna:[
+              {q:'int(89.9) gives 89 not 90 — why?', a:'int() truncates — chops the decimal. It does NOT round. Use round() when you want rounding. int() is for when you want the integer part only.', code:'int(89.9)    # 89\nround(89.9)  # 90'},
+              {q:'What is 7 // 2?', a:'Floor division — gives the whole number part of the division. 7 // 2 = 3. Remainder: 7 % 2 = 1. Together: 7 = (3 × 2) + 1', code:null},
+              {q:'How to print a number with commas (like 1,00,000)?', a:'Use :, in f-strings for international format. Python follows US convention (1,000,000).', code:'print(f"{1000000:,}")  # 1,000,000\nprint(f"{price:.2f}")  # 2 decimals'},
+            ]
+          },
+          {
+            id:'d4', num:'Day 04', topic:'Booleans, comparisons and if/elif/else', badge:'py',
+            topics:['True and False — capital matters','Comparison: ==, !=, >, <, >=, <=','Logical: and, or, not','Truthy/falsy: 0, "", [], {}, None are False','if / elif / else — only one branch runs','Ternary: "Pass" if score >= 40 else "Fail"','Order of conditions matters'],
+            practical:'Job eligibility checker: ask age (18–35), marks % (>=60), years experience (>=2), driving licence (yes/no). Check all conditions and print which criteria passed or failed.',
+            qna:[
+              {q:'if marks == 75 or 80 — why does this not work?', a:'Python reads this as (marks == 75) or (80). Since 80 is truthy, this is always True! Must write: marks == 75 or marks == 80', code:'# Wrong:\nif marks == 75 or 80:\n# Correct:\nif marks == 75 or marks == 80:'},
+              {q:'What is falsy in Python?', a:'Values that act like False in conditions: 0, 0.0, "" (empty string), [] (empty list), {} (empty dict), None. Everything else is truthy.', code:'if []:   # False — empty list\nif [0]:  # True — list has one item'},
+              {q:'Can I write 40 <= marks <= 100 in Python?', a:'Yes! Python supports chained comparisons. This is cleaner than marks >= 40 and marks <= 100.', code:'if 0 <= age <= 120:  # valid Python'},
+            ]
+          },
+          {
+            id:'d5', num:'Day 05', topic:'Loops — for and while', badge:'py',
+            topics:['for loop with range(start, stop, step)','Looping over a list directly','enumerate() — index + value together','while loop — use when count is unknown','break and continue','range() vs list iteration — when to use which','Nested loops briefly'],
+            practical:'Marks analyser: given a fixed list of 10 marks, use a for loop (no built-in sum/max/min) to find total, average, highest, lowest, pass count, fail count, and list all marks below 50 with their position.',
+            qna:[
+              {q:'range(5) starts from 0 but I want 1 to 5?', a:'range(5) gives 0,1,2,3,4. range(1,6) gives 1,2,3,4,5. Remember: stop is excluded.', code:'for i in range(1, 6):\n    print(i)  # 1 2 3 4 5'},
+              {q:'When to use for vs while?', a:'for: when you know what to loop over (a list, a range). while: when you loop until a condition changes (user input, retry, wait). Default to for unless you need while.', code:null},
+              {q:'What does enumerate() give me?', a:'Both the index and value together. Much cleaner than maintaining a counter variable.', code:'for i, name in enumerate(names):\n    print(f"{i+1}. {name}")'},
+            ]
+          },
+        ],
+        assignment: {
+          title:'Week 1 mini-project — marks loop program',
+          desc:'Write a program that collects student names and marks from user input (stop when they type "done"), then prints total students, average, highest, lowest, and lists who passed and who failed.',
+          tasks:['Use a while True loop with break to collect input','Store names and marks as separate lists (or one list of pairs)','Use a for loop with enumerate to process results','Format all output cleanly with f-strings','Bonus: add input validation so marks must be 0–100']
+        }
+      },
+      {
+        id:'w2', label:'Week 2', title:'Data structures', tag:'py',
+        days: [
+          {
+            id:'d6', num:'Day 06', topic:'Lists — Python\'s most used structure', badge:'py',
+            topics:['Creating lists, mixed types allowed','Indexing (0-based) and negative indexing','Slicing: list[start:stop:step]','Methods: append, extend, insert, remove, pop, sort, reverse','len(), sum(), min(), max()','in operator for membership','Modifying list items by index'],
+            practical:'Top students finder: given lists of student names and marks, print all students with marks, find who scored highest using index(), create a "passed" list with only marks >= 60, print top 3 using sorted() and slicing.',
+            qna:[
+              {q:'What is the difference between append() and extend()?', a:'append() adds one item (even a list as one item). extend() unpacks a list and adds each item individually.', code:'a = [1,2]\na.append([3,4])   # [1,2,[3,4]]\na.extend([3,4])   # [1,2,3,4]'},
+              {q:'How do I copy a list safely?', a:'Using b = a creates a reference — both point to the same list. To get an independent copy use b = a.copy() or b = a[:]', code:'b = a.copy()  # independent copy\nb = a[:]      # also a copy'},
+              {q:'list.sort() vs sorted(list)?', a:'sort() modifies the original list permanently. sorted() returns a NEW list, original unchanged. For data work, prefer sorted() so you keep the original order.', code:'ranked = sorted(marks, reverse=True)\n# original marks list unchanged'},
+            ]
+          },
+          {
+            id:'d7', num:'Day 07', topic:'List comprehensions — the Pythonic superpower', badge:'py',
+            topics:['Build from the loop version every time','[expression for item in iterable]','With filter: [expr for item in iterable if condition]','Transformation + filter combined','isinstance() for type checking','When NOT to use comprehensions (side effects)','Comprehension creates a NEW list — must assign'],
+            practical:'Four data cleaning tasks using ONLY list comprehensions (no for loops): filter valid prices (>0), strip and title-case names, clip scores to 0–100 using min/max, label temperatures as Normal/Fever/High Fever.',
+            qna:[
+              {q:'How do I read a list comprehension out loud?', a:'"Give me m, for each m in marks, if m is greater than 60." Read left to right. If you can say it in plain English, you understand it.', code:'passing = [m for m in marks if m >= 60]'},
+              {q:'Does a comprehension modify the original list?', a:'No. It always creates a new list. You must assign it to a variable or the result is thrown away.', code:'[m*2 for m in marks]     # result lost!\ndoubled = [m*2 for m in marks]  # saved ✓'},
+              {q:'Can I use a function call in a comprehension?', a:'Yes, the expression can be anything — a function call, method, ternary, even nested comprehension.', code:'clean = [name.strip().title() for name in raw_names]'},
+            ]
+          },
+          {
+            id:'d8', num:'Day 08', topic:'Tuples and sets', badge:'py',
+            topics:['Tuple: immutable list, created with ()','Single item tuple needs trailing comma: (42,)','Tuple unpacking: name, age = ("Priya", 21)','Variable swap: a, b = b, a','Sets: unique values only, no order','Set creation: set() or {val1, val2}','Set operations: union |, intersection &, difference -','Fast membership check with in'],
+            practical:'Customer analysis: given two sets of weekly buyers (week1, week2) and a list of product tuples (name, price, category) — find loyal customers (both weeks), new customers, lost customers, unique categories, most expensive per category.',
+            qna:[
+              {q:'Why can I not do my_set[0]?', a:'Sets are unordered — there is no "first item". To get items by position, convert to a list first. But note: the order will be unpredictable.', code:'items = list(my_set)\nprint(items[0])  # order not guaranteed'},
+              {q:'What is (42) vs (42,)?', a:'(42) is just the number 42 in brackets. Python needs the comma to know it is a tuple. Always add a trailing comma for single-item tuples.', code:'type((42))   # <class "int">\ntype((42,))  # <class "tuple">'},
+              {q:'When should I use a set instead of a list?', a:'When you need uniqueness or fast membership checking. set is O(1) for "in" checks, list is O(n). For large data (checking if a customer ID exists) sets are much faster.', code:null},
+            ]
+          },
+          {
+            id:'d9', num:'Day 09', topic:'Dictionaries — the shape of all data', badge:'py',
+            topics:['Key-value pairs — keys must be unique','Creating, reading, updating, deleting','dict[key] vs dict.get(key, default)','Methods: keys(), values(), items()','Looping with for key, val in d.items()','Dict comprehension: {k:v for ...}','List of dicts — this IS a dataset','in checks keys, not values'],
+            practical:'Product inventory system: given a list of product dicts (id, name, price, stock, category) — find out-of-stock items, calculate total inventory value, compute average price per category, find most expensive per category, add a "status" key (Low/OK/High) to each.',
+            qna:[
+              {q:'Why use .get() instead of []?', a:'"Priya" in student checks if "Priya" is a KEY. To check values, use "Priya" in student.values(). This is a very common mistake.', code:'student.get("phone", "N/A")  # safe\nstudent["phone"]             # KeyError if missing'},
+              {q:'"Priya" in student — why is this False?', a:'"Priya" in student checks if "Priya" is a KEY. To check values use "Priya" in student.values(). Very common mistake.', code:'student = {"name": "Priya"}\n"Priya" in student          # False\n"Priya" in student.values() # True'},
+              {q:'What is a list of dicts and why does it matter?', a:'A list of dicts is a table. Each dict is a row. Each key is a column. This is how JSON files look, how APIs send data, and what pandas creates from a CSV. Understanding this now makes pandas trivial.', code:'data = [\n  {"name":"Priya", "marks":88},\n  {"name":"Rahul", "marks":72}\n]'},
+            ]
+          },
+          {
+            id:'d10', num:'Day 10', topic:'Week 2 project — Student Report Card', badge:'proj',
+            topics:['Collect student names and marks via input()','Store as a list of dicts','Compute: average, highest, lowest, pass/fail count','Sort by marks descending','Add grade: A+/A/B/C/F per student','Print a formatted table with rank','Bonus: search by name, group by grade'],
+            practical:'Full project: collect N students via input, store as list of dicts, compute all stats, sort by marks, assign grades, print a formatted report card table with ranks. Bonus: search feature and grade group summary.',
+            qna:[
+              {q:'How do I sort a list of dicts by a key?', a:'Use sorted() with a lambda as the key parameter. This returns a new sorted list without changing the original.', code:'ranked = sorted(classroom,\n    key=lambda s: s["marks"],\n    reverse=True)'},
+              {q:'How do I count items by category in a dict?', a:'Loop and use .get() with 0 as default. This is the counter pattern — very common in data analysis.', code:'counts = {}\nfor s in classroom:\n    g = s["grade"]\n    counts[g] = counts.get(g, 0) + 1'},
+              {q:'I want to find a student by name — how?', a:'Loop through the list and check each dict. Or use a list comprehension to find all matches.', code:'match = [s for s in classroom\n         if s["name"].lower() == name.lower()]'},
+            ]
+          },
+        ],
+        assignment: {
+          title:'Week 2 project — Student Report Card (full version)',
+          desc:'Complete program using lists, dicts, loops, comprehensions, and conditions. Closest to real analyst work so far.',
+          tasks:['Collect N students (name + marks) via input(), store as list of dicts','Compute stats: average, highest, lowest — using list comprehensions','Sort by marks, assign grades, print formatted table with ranks','Show pass/fail counts and pass percentage','Bonus: group by grade and show count per grade','Bonus: search for a student by name and show their rank']
+        }
+      },
+      {
+        id:'w3', label:'Week 3', title:'Functions + files', tag:'py',
+        days: [
+          {
+            id:'d11', num:'Day 11', topic:'Functions — def, parameters, return', badge:'py',
+            topics:['Why functions? DRY principle','def syntax, parameters, arguments','Default parameter values','return vs print — critical distinction','Multiple return values (returns a tuple)','Local vs global scope','Calling functions from other functions'],
+            practical:'Refactor the Week 2 Report Card: extract get_grade(), compute_stats(), print_report() as separate functions. Each function should do ONE thing. The main program should read like a summary of steps.',
+            qna:[
+              {q:'What is the difference between print() and return?', a:'print() shows output on screen — it does not give the value to the caller. return sends the value back so the caller can use it. A function without return gives None.', code:'def bad(x):  print(x*2)    # shows but returns None\ndef good(x): return x*2    # returns value for use'},
+              {q:'What is a default parameter?', a:'A value used when the caller does not provide that argument. Allows functions to work with fewer arguments in simple cases.', code:'def greet(name, greeting="Hello"):\n    return f"{greeting}, {name}"'},
+              {q:'What is scope?', a:'Variables inside a function are local — they only exist inside it. Variables outside are global. Functions cannot accidentally modify outside variables unless explicitly told to.', code:null},
+            ]
+          },
+          {
+            id:'d12', num:'Day 12', topic:'Lambda, map, filter', badge:'py',
+            topics:['Lambda: anonymous one-line functions','map() — apply function to every item','filter() — keep items that pass a test','Combine with list() to get results','sorted() with key=lambda','When to use lambda vs a full function','Real use: cleaning a data column'],
+            practical:'Data pipeline using map and filter: take a list of raw salary strings ("₹45,000", "₹1,20,000"...) — use map to clean and convert to int, use filter to keep only salaries above 50000, use sorted with lambda to rank them.',
+            qna:[
+              {q:'When should I use lambda vs def?', a:'Lambda for short, one-expression functions used in one place (especially as arguments to sorted, map, filter). def for anything reusable or more than one line.', code:'# Lambda: sort by last name\nsorted(names, key=lambda n: n.split()[-1])'},
+              {q:'What does map() return?', a:'A map object (lazy). Wrap it in list() to get a list. map(func, iterable) applies func to every item.', code:'clean = list(map(str.strip, raw_names))'},
+              {q:'filter() vs list comprehension — which to use?', a:'List comprehensions are generally preferred in Python for readability. filter() is useful when you already have a named function to use as the test.', code:'# These do the same thing:\nlist(filter(lambda x: x > 0, nums))\n[x for x in nums if x > 0]  # preferred'},
+            ]
+          },
+          {
+            id:'d13', num:'Day 13', topic:'File handling + JSON', badge:'py',
+            topics:['open() with r, w, a modes','with statement — always use this','read(), readlines(), write()','Reading a CSV manually line by line','json.load() — read JSON from file','json.dumps() — convert dict to JSON string','json.dump() — write JSON to file','Encoding: always use encoding="utf-8"'],
+            practical:'Build a simple data pipeline: read a raw .txt file of student records (name,marks on each line), parse each line into a dict, compute stats, then write results to a clean JSON file. This is what real data ingestion looks like.',
+            qna:[
+              {q:'Why always use "with" for files?', a:'with automatically closes the file when done — even if an error occurs. Without with, a crash leaves the file open and locked. Always use with open(...) as f:', code:'with open("data.txt") as f:\n    content = f.read()  # file auto-closes'},
+              {q:'json.dump vs json.dumps — which has the s?', a:'dumps = dump to String. dump = dump to File. Same for loads/load.', code:'# To string:\ntext = json.dumps(data, indent=2)\n# To file:\njson.dump(data, f, indent=2)'},
+              {q:'How do I read a CSV without pandas?', a:'Read line by line, strip the newline, split by comma. This is slow and fragile — it breaks with commas inside values. This is exactly why pandas exists.', code:'with open("data.csv") as f:\n    for line in f:\n        row = line.strip().split(",")'},
+            ]
+          },
+          {
+            id:'d14', num:'Day 14', topic:'Error handling + try/except', badge:'py',
+            topics:['Why errors happen — type, value, key, file','try / except / else / finally','except ExceptionType as e','Multiple except blocks','raise — throwing your own errors','Common errors: ValueError, TypeError, KeyError, FileNotFoundError','Using errors to validate user input'],
+            practical:'Robust data loader: write a function that reads a CSV file, converts marks to float, handles missing files, handles non-numeric marks, and logs each error to a separate error log file. Return clean data and a count of errors.',
+            qna:[
+              {q:'What is the difference between except Exception and except ValueError?', a:'except ValueError only catches that specific error. except Exception catches almost everything. Be specific — catching everything can hide real bugs.', code:'try:\n    x = int(val)\nexcept ValueError:\n    print("Not a number")  # specific'},
+              {q:'What does finally do?', a:'finally always runs regardless of whether an error occurred. Used for cleanup: closing files, releasing resources.', code:'try:\n    f = open("data.txt")\nexcept:\n    print("Error")\nfinally:\n    f.close()  # always runs'},
+              {q:'How do I raise my own error?', a:'Use raise with an exception type and message. This stops execution and tells the caller something is wrong.', code:'if marks < 0 or marks > 100:\n    raise ValueError(f"Invalid marks: {marks}")'},
+            ]
+          },
+          {
+            id:'d15', num:'Day 15', topic:'Phase 1 capstone — data cleaner script', badge:'proj',
+            topics:['Read a messy raw data file','Parse each line into a structured dict','Validate and clean: missing values, wrong types, out-of-range','Write clean data to JSON output','Write errors to a separate error log','Compute summary statistics on clean data','Use functions to organise every step'],
+            practical:'Given a messy student_records.txt (some rows missing marks, some have text instead of numbers, some have marks > 100), write a complete pipeline: read → validate → clean → compute stats → write output.json and errors.txt. Pure Python, no libraries.',
+            qna:[
+              {q:'How should I structure a data cleaning script?', a:'Use functions for each stage: load_data(), validate_row(), clean_data(), compute_stats(), save_results(). Each function does one job. main() calls them in order. This is exactly how production pipelines are structured.', code:null},
+              {q:'What counts as "clean" data?', a:'No missing required fields, correct data types, values within valid ranges, no duplicates, consistent formatting. Document your cleaning rules as comments.', code:null},
+              {q:'Should I stop when I find one error?', a:'No — a good pipeline collects ALL errors, processes what it can, and reports a summary. Never fail on the first bad row.', code:'errors = []\nclean = []\nfor row in raw:\n    if valid(row): clean.append(row)\n    else: errors.append(row)'},
+            ]
+          },
+        ],
+        assignment: {
+          title:'Phase 1 final project — data cleaning pipeline',
+          desc:'Complete pipeline using pure Python: no libraries. Read a raw file, clean it, analyse it, write structured output.',
+          tasks:['Read a multi-column raw text file (name, age, city, marks)','Validate every field: type, range, presence','Collect errors separately — do not skip silently','Use at least 4 named functions to organise the code','Write clean records to output.json','Write error log to errors.txt with line number and reason','Compute and print: count clean, count errors, average marks, pass rate']
+        }
+      }
+    ]
+  },
+  {
+    id: 'phase2',
+    label: 'Phase 2 — NumPy',
+    color: 'np',
+    desc: 'First library. Bridge from Python lists to numerical computing. Every example should be data-focused. Speed, vectorisation, and the copy/view gotcha are the three things to nail.',
+    stats: [{ val:'1', label:'Week' }, { val:'5', label:'Lectures' }, { val:'1', label:'Project' }],
+    weeks: [
+      {
+        id:'w4', label:'Week 4', title:'NumPy', tag:'np',
+        days: [
+          {
+            id:'d16', num:'Day 16', topic:'Why NumPy? Arrays vs lists', badge:'np',
+            topics:['Why not plain Python lists for data?','np.array() — creating from a list','dtype attribute','Shape and ndim','Vectorised math — no loops needed','Creating arrays: zeros, ones, arange, linspace, eye','np.random.seed() — always set this'],
+            practical:'Speed demo: multiply a list of 1 million prices by 1.18 using a Python loop vs NumPy. Time both with time module. Then create arrays using all creation methods and explore their shapes.',
+            qna:[
+              {q:'Why is NumPy faster than a Python list?', a:'NumPy stores data in contiguous C memory blocks with a fixed dtype. Python lists store pointers to objects. NumPy operations are vectorised C loops — no Python overhead.', code:'arr = np.array([1,2,3,4,5])\narr * 1.18  # multiplies ALL elements, no loop'},
+              {q:'What is dtype?', a:'The data type of every element in the array. All items in a NumPy array are the same type (int32, float64 etc.). This is what makes it fast.', code:'arr = np.array([1,2,3])\nprint(arr.dtype)  # int64\narr.astype(float) # convert'},
+              {q:'What does np.arange vs np.linspace do?', a:'arange(0,10,2) steps by value: [0,2,4,6,8]. linspace(0,1,5) creates exactly N evenly spaced values: [0, 0.25, 0.5, 0.75, 1.0]', code:null},
+            ]
+          },
+          {
+            id:'d17', num:'Day 17', topic:'Indexing, slicing, 2D arrays and copy vs view', badge:'np',
+            topics:['1D indexing and slicing','2D arrays: shape (rows, cols)','arr[row, col] — 2D indexing','arr[:, 0] — entire column','Boolean masking: arr[arr > 5]','np.where() — conditional selection','Copy vs view — the most important gotcha in NumPy'],
+            practical:'Given a 5x5 matrix of random student marks: extract column 2 (one subject), find all marks above 75, replace all marks below 40 with exactly 40 (pass mark floor), compute row averages (per student) and column averages (per subject).',
+            qna:[
+              {q:'What is the copy vs view problem?', a:'b = arr[:] creates a VIEW — it shares the same data. Changing b changes arr. b = arr.copy() creates an independent copy. This is the #1 NumPy gotcha.', code:'b = arr[:]       # view — shares memory\nb[0] = 99        # arr[0] is now 99 too!\nc = arr.copy()   # independent copy ✓'},
+              {q:'How does boolean masking work?', a:'arr > 5 creates a boolean array of True/False. arr[arr > 5] returns only the elements where True. This is how you filter a column in NumPy.', code:'marks = np.array([78,45,92,37,88])\npassing = marks[marks >= 60]\n# array([78, 92, 88])'},
+              {q:'axis=0 vs axis=1 — I always get confused', a:'axis=0 = down the rows = column-wise result. axis=1 = across the columns = row-wise result. Think: axis=0 collapses rows, axis=1 collapses columns.', code:'arr.mean(axis=0)  # mean of each column\narr.mean(axis=1)  # mean of each row'},
+            ]
+          },
+          {
+            id:'d18', num:'Day 18', topic:'Array operations, math functions and statistics', badge:'np',
+            topics:['Arithmetic between arrays (same shape)','Broadcasting rules','np.sum(), mean(), std(), min(), max(), median()','np.sort(), argsort()','np.unique(), np.count_nonzero()','np.clip() — bounding values','np.round(), np.abs()'],
+            practical:'Analyse a dataset of 100 simulated exam scores: compute all descriptive stats, find the top 10 scorers using argsort, clip any score below 0 to 0, compute how many are in each grade band (use boolean masks for each range).',
+            qna:[
+              {q:'What is broadcasting?', a:'When two arrays have different but compatible shapes, NumPy automatically "stretches" the smaller one. arr + 10 adds 10 to every element — that scalar is broadcast.', code:'prices = np.array([100,200,300])\nprices * 1.18  # 1.18 broadcasts to all'},
+              {q:'np.argsort() — what does it actually return?', a:'The INDICES that would sort the array, not the sorted values. Use it to rank students or find the index of the Nth largest value.', code:'marks = np.array([78,95,61,88])\nranks = np.argsort(marks)[::-1]\n# [1,3,0,2] — indices in rank order'},
+              {q:'How is np.std() different from normal std?', a:'By default NumPy uses ddof=0 (population std). For sample std use ddof=1. For most data analysis of a sample, use ddof=1.', code:'np.std(marks, ddof=1)  # sample std'},
+            ]
+          },
+          {
+            id:'d19', num:'Day 19', topic:'Reshape, join, split and random distributions', badge:'np',
+            topics:['reshape(), flatten(), ravel()','np.concatenate(), vstack(), hstack()','np.array_split()','Random: seed(), randint, rand, choice, shuffle','Normal distribution — marks, heights','Poisson distribution — event counts','Binomial distribution — pass/fail','Uniform distribution — random sampling'],
+            practical:'Simulate a classroom dataset: generate 200 student marks using normal distribution (mean=65, std=15), clip to 0-100, simulate daily sales for 30 days using Poisson (mean=20), plot a simple text histogram using value_counts logic.',
+            qna:[
+              {q:'Why must I always set np.random.seed()?', a:'Without a seed, results change every run — your analysis is not reproducible. Set seed at the top of every notebook or script. Use any integer.', code:'np.random.seed(42)  # top of every script!\nmarks = np.random.normal(65, 15, 100)'},
+              {q:'Normal vs Poisson — when to use which?', a:'Normal: continuous measurements that cluster around a mean (exam scores, heights, weights). Poisson: count of events per unit time/space (daily sales, server requests, emails received).', code:null},
+              {q:'What does reshape(-1, 3) mean?', a:'-1 tells NumPy to figure out that dimension automatically. If you have 12 elements and say reshape(-1, 3), NumPy computes 12/3 = 4 rows.', code:'arr = np.arange(12)\narr.reshape(-1, 3)  # shape (4,3)'},
+            ]
+          },
+          {
+            id:'d20', num:'Day 20', topic:'NumPy ufuncs and Week 4 project', badge:'proj',
+            topics:['Universal functions — operate element-wise','np.add, multiply, subtract, divide','np.log, log2, log10, exp, sqrt','np.sin, cos, tan (briefly)','np.maximum, minimum (element-wise)','np.where() for conditional arrays','Review: full NumPy pipeline on a dataset'],
+            practical:'Full NumPy project: given a 2D array of monthly sales data (12 months × 5 products) — compute monthly totals, product totals, monthly growth rate, find best and worst months per product, normalise data to 0-1 range.',
+            qna:[
+              {q:'What is a ufunc?', a:'Universal function — a NumPy function that operates element-wise on arrays with vectorisation. np.sqrt(arr) computes sqrt for every element in one call, no loop.', code:'np.sqrt(np.array([4,9,16,25]))\n# array([2., 3., 4., 5.])'},
+              {q:'How do I normalise data to 0-1?', a:'Min-max normalisation. Subtract the min (shifts to 0) then divide by the range (scales to 1). Common preprocessing step.', code:'norm = (arr - arr.min()) / (arr.max() - arr.min())'},
+              {q:'np.where() — how is this different from boolean masking?', a:'Boolean masking selects values. np.where(condition, x, y) returns x where True and y where False — like a vectorised ternary.', code:'grades = np.where(marks >= 60, "Pass", "Fail")'},
+            ]
+          },
+        ],
+        assignment: {
+          title:'Week 4 project — NumPy sales analysis',
+          desc:'Given a 2D NumPy array of monthly sales (rows=months, cols=products), perform a complete numerical analysis without pandas.',
+          tasks:['Compute total sales per product and per month (axis operations)','Find the best performing month and worst performing product','Calculate month-over-month growth rate','Flag any month where total sales dropped more than 10%','Normalise each product\'s sales to 0–1 range','Bonus: add simulated noise using np.random and re-analyse']
+        }
+      }
+    ]
+  },
+  {
+    id: 'phase3',
+    label: 'Phase 3 — Pandas',
+    color: 'pd',
+    desc: 'The heart of data analytics. Every lecture should use a real dataset. The SQL student will shine here — GroupBy is just GROUP BY. By end of week 6, students can handle any messy CSV independently.',
+    stats: [{ val:'2', label:'Weeks' }, { val:'10', label:'Lectures' }, { val:'1', label:'Project' }],
+    weeks: [
+      {
+        id:'w5', label:'Week 5', title:'Load, explore and clean', tag:'pd',
+        days: [
+          {
+            id:'d21', num:'Day 21', topic:'Series and DataFrame basics', badge:'pd',
+            topics:['Series: one column with index','DataFrame: table with labelled rows and columns','Creating from dict, list, NumPy array','Index concept — the row label','df.shape, dtypes, columns, index','df.head(), tail(), info(), describe()','Accessing a column: df["col"] and df.col'],
+            practical:'Load a real CSV (use superstore or student performance from Kaggle). Run all exploration methods. Print: shape, column names, dtypes, first 5 rows, last 5, summary stats. Find which columns have nulls.',
+            qna:[
+              {q:'What is the index?', a:'Every row has a label called the index (default: 0,1,2...). Like a primary key. You can set a column as index: df.set_index("id"). This makes loc[] use that column for lookup.', code:'df.set_index("student_id")\ndf.loc["STU001"]  # look up by ID'},
+              {q:'Series vs DataFrame?', a:'A Series is one column — a 1D labelled array. A DataFrame is a 2D table — a dict of Series sharing the same index. df["marks"] gives you the marks Series.', code:'series = df["marks"]  # Series\ntype(series)  # pandas.core.series.Series'},
+              {q:'df.info() vs df.describe()?', a:'info() shows dtypes, non-null counts, memory usage — tells you WHAT your data looks like structurally. describe() shows statistics (mean, std, min, max) — tells you WHAT the values look like numerically.', code:null},
+            ]
+          },
+          {
+            id:'d22', num:'Day 22', topic:'Reading data — CSV, JSON, Excel', badge:'pd',
+            topics:['pd.read_csv() — core parameters: sep, header, names, index_col, usecols, nrows, skiprows','pd.read_json() — from file and URL','pd.read_excel() — sheet_name param','df.to_csv(), to_excel(), to_json()','Reading directly from a URL','Handling encoding errors (encoding="utf-8")','Checking what was loaded: info() always first'],
+            practical:'Load the same dataset three different ways: as CSV, export to JSON and re-load, export to Excel and re-load. Use usecols to load only 3 columns. Use nrows=100 for a quick preview of a large file.',
+            qna:[
+              {q:'When would I use nrows in read_csv?', a:'When a file is huge (millions of rows) and you want to inspect the structure first. Load 100 rows, check dtypes and nulls, then load fully only when you know what to expect.', code:'df = pd.read_csv("big_file.csv", nrows=100)'},
+              {q:'My CSV has special characters and shows garbage?', a:'Add encoding="utf-8" or encoding="latin-1". UTF-8 handles most modern files. Latin-1 handles older European files. Try utf-8 first.', code:'df = pd.read_csv("file.csv", encoding="utf-8")'},
+              {q:'How do I read only certain columns to save memory?', a:'Use usecols parameter with a list of column names. Loads only those columns — much faster for wide datasets.', code:'df = pd.read_csv("data.csv",\n    usecols=["name","marks","city"])'},
+            ]
+          },
+          {
+            id:'d23', num:'Day 23', topic:'Selecting and filtering data', badge:'pd',
+            topics:['df["col"] vs df[["c1","c2"]]','loc[]: label-based (rows and columns by name)','iloc[]: integer position (like array indexing)','Boolean filtering: df[df["marks"] > 60]','Multiple conditions: & and | (NOT and/or)','query() method for readable filters','isin() and between() shortcuts'],
+            practical:'Filter a student dataset: select only students who passed (marks >= 40), from Mumbai, with attendance > 75%. Then select only the name, marks, and grade columns for those students. Use at least 3 different selection methods.',
+            qna:[
+              {q:'Why & instead of "and" in pandas filters?', a:'"and" operates on single values. & operates element-wise on Series (column by column). Pandas needs &, |, ~ for filters on columns.', code:'# WRONG:\ndf[df["age"] > 20 and df["city"] == "Mumbai"]\n# CORRECT:\ndf[(df["age"] > 20) & (df["city"] == "Mumbai")]'},
+              {q:'loc vs iloc — when to use which?', a:'iloc is always integers (position 0,1,2...). loc uses labels — if your index is dates or custom strings, loc uses those. If index is 0,1,2 they look the same.', code:'df.iloc[0]          # first row by position\ndf.loc[0, "marks"]  # row label 0, col "marks"'},
+              {q:'What does isin() do?', a:'Checks if values are in a given list. Cleaner than writing many OR conditions.', code:'cities = ["Mumbai","Delhi","Pune"]\ndf[df["city"].isin(cities)]'},
+            ]
+          },
+          {
+            id:'d24', num:'Day 24', topic:'Cleaning — missing values', badge:'pd',
+            topics:['df.isnull() and df.notnull()','df.isnull().sum() — count nulls per column','df.isnull().sum() / len(df) — null percentage','dropna() — axis, how, subset, thresh','fillna() — scalar, mean, median, mode, ffill, bfill','Deciding strategy based on context','When NOT to drop data — ask why it is missing'],
+            practical:'Take a messy dataset with 20–30% nulls. For each column: check null count, decide fill or drop strategy based on context, apply the fix. Document your decision for each column as a comment. Compare row count before and after.',
+            qna:[
+              {q:'When should I drop vs fill missing values?', a:'Fill when the missing is random and you have a good estimate (mean/median for marks, mode for category, forward-fill for time series). Drop when the missing is the key field (no name = useless row) or when < 5% rows are affected.', code:null},
+              {q:'What is forward fill (ffill)?', a:'Fills each null with the previous non-null value. Used in time series — if temperature was missing on Tuesday, use Monday\'s value. Makes sense for ordered, slowly-changing data.', code:'df["temp"].fillna(method="ffill")'},
+              {q:'How do I fill nulls differently per column?', a:'Call fillna() separately for each column with its own strategy.', code:'df["marks"].fillna(df["marks"].median())\ndf["city"].fillna("Unknown")\ndf["date"].fillna(method="ffill")'},
+            ]
+          },
+          {
+            id:'d25', num:'Day 25', topic:'Cleaning — types, wrong data, duplicates', badge:'pd',
+            topics:['astype() for type conversion','pd.to_datetime() — parsing dates with errors="coerce"','pd.to_numeric() — convert strings with errors="coerce"','df.str.strip(), lower(), upper(), replace(), contains()','clip() — bounding outliers','df.duplicated() and drop_duplicates()','Detecting and fixing wrong data (negative prices, impossible ages)'],
+            practical:'Full cleaning pipeline on a real messy dataset: fix column name casing, convert dtypes, parse dates, strip and title-case text columns, clip impossible values, remove duplicates. Print a before/after summary showing shape and null counts.',
+            qna:[
+              {q:'What does errors="coerce" do in to_numeric()?', a:'When a value cannot be converted (e.g. "N/A" or "missing"), coerce turns it into NaN instead of throwing an error. Then you can fillna() it. Without coerce, one bad value crashes everything.', code:'df["marks"] = pd.to_numeric(df["marks"],\n    errors="coerce")'},
+              {q:'How do I clean all column names at once?', a:'Chain str methods on df.columns. Strip spaces and lowercase in one line.', code:'df.columns = df.columns.str.strip().str.lower().str.replace(" ","_")'},
+              {q:'drop_duplicates() — which row is kept?', a:'By default the FIRST occurrence is kept. Use keep="last" to keep the last, or keep=False to drop ALL duplicates. Use subset= to check duplicates on specific columns only.', code:'df.drop_duplicates(subset=["email"], keep="first")'},
+            ]
+          },
+        ],
+        assignment: {
+          title:'Week 5 project — full cleaning pipeline',
+          desc:'Take any real messy dataset and produce a clean, analysis-ready version. Document every decision.',
+          tasks:['Load dataset, run full exploration: info(), describe(), null counts','Fix all column names: lowercase, no spaces','Fix all dtypes: convert strings to numeric/datetime where needed','Handle nulls: different strategy per column with comment explaining why','Fix wrong data: impossible values, outliers using clip()','Remove duplicates','Print before/after: shape, null counts, dtypes. Zero nulls at the end.']
+        }
+      },
+      {
+        id:'w6', label:'Week 6', title:'Analyse and transform', tag:'pd',
+        days: [
+          {
+            id:'d26', num:'Day 26', topic:'Sorting, ranking and value counts', badge:'pd',
+            topics:['sort_values() — single and multiple columns','ascending/descending per column','nlargest(), nsmallest()','rank() — dense, min, percent','value_counts() — the most used single function in EDA','unique() and nunique()','Frequency table with normalise=True'],
+            practical:'Explore a sales dataset: find top 10 products by revenue, rank customers by total spend, get value_counts of every categorical column, find which category appears most/least, compute percentage distribution of each category.',
+            qna:[
+              {q:'What is value_counts() and why is it so useful?', a:'Counts how many times each unique value appears. The single most used function in exploratory data analysis. Instantly shows distribution of any column.', code:'df["city"].value_counts()\ndf["city"].value_counts(normalise=True)  # percentages'},
+              {q:'How do I sort by two columns?', a:'Pass a list to sort_values(). Use a list for ascending too when different per column.', code:'df.sort_values(\n    by=["dept","salary"],\n    ascending=[True, False])'},
+              {q:'What is rank() useful for?', a:'Assigns a rank to each row based on a column value. Used for: percentile rank of students, customer tier (top 10%), leaderboards.', code:'df["rank"] = df["marks"].rank(ascending=False)\ndf["pct_rank"] = df["marks"].rank(pct=True)'},
+            ]
+          },
+          {
+            id:'d27', num:'Day 27', topic:'GroupBy — the most important analytical operation', badge:'pd',
+            topics:['groupby() single column','groupby() multiple columns','agg() with list of functions','Named aggregations (new syntax)','transform() — add group stat back to original','Common pattern: top N per group','Connect to SQL GROUP BY explicitly'],
+            practical:'Full GroupBy analysis on sales data: average revenue per product category, number of orders per customer, monthly totals, top 3 products per category, add a column showing each order\'s share of its customer\'s total spend.',
+            qna:[
+              {q:'What is the GroupBy mental model?', a:'Split → Apply → Combine. Split the DataFrame into groups by unique values. Apply a function (sum, mean, count) to each group. Combine results. Identical to SQL GROUP BY.', code:'df.groupby("dept")["salary"].mean()\n# SQL: SELECT dept, AVG(salary)\n#      FROM emp GROUP BY dept'},
+              {q:'agg() vs transform() — what is the difference?', a:'agg() reduces each group to one row — you get a summary. transform() returns a value for every original row — the group stat is broadcast back. Use transform when you want to add a column to the original df.', code:'# agg: summary table\ndf.groupby("dept")["salary"].agg("mean")\n# transform: add group mean back\ndf["dept_avg"] = df.groupby("dept")["salary"].transform("mean")'},
+              {q:'How do I get the top N rows per group?', a:'Sort first, then group, then use head(N). Or use nlargest within a groupby.', code:'df.sort_values("sales", ascending=False)\n  .groupby("category")\n  .head(3)'},
+            ]
+          },
+          {
+            id:'d28', num:'Day 28', topic:'Merging, joining and concatenating DataFrames', badge:'pd',
+            topics:['pd.merge() — inner, left, right, outer','on=, left_on=, right_on= parameters','Handling duplicate columns after merge','pd.concat() — stacking rows or columns','join() method briefly','When to merge vs concat','Checking for lost/gained rows after merge'],
+            practical:'Join a sales table with a product master table (left join on product_id), then join with a customer table. Check: any orders with missing product info? Any customers with no orders? Concatenate two months of data, check no duplicate order IDs.',
+            qna:[
+              {q:'Inner vs left join — which to use?', a:'Inner: only rows where the key exists in BOTH tables. Left: all rows from left table, NaN where right has no match. Default is inner — dangerous for data loss! Usually use left for analytical queries.', code:'pd.merge(orders, products,\n    on="product_id",\n    how="left")  # keep all orders'},
+              {q:'merge() vs concat() — when to use each?', a:'merge() combines columns based on a matching key (like SQL JOIN). concat() stacks rows or columns without matching (like SQL UNION). Joining tables = merge. Combining two months = concat.', code:null},
+              {q:'My merge created columns like price_x and price_y — why?', a:'Both tables had a "price" column. Pandas adds _x and _y suffixes. Fix with suffixes= parameter or drop the duplicate after merge.', code:'pd.merge(a, b, on="id",\n    suffixes=("_orders","_products"))'},
+            ]
+          },
+          {
+            id:'d29', num:'Day 29', topic:'apply(), string operations and binning', badge:'pd',
+            topics:['apply() for custom row/column transformations','map() for value replacement from dict','df.str. accessor — all string operations','str.contains(), startswith(), extract(), split()','pd.cut() — bin by custom ranges','pd.qcut() — bin by quantiles (equal-size groups)','Regex in str.contains() and str.extract()'],
+            practical:'Data enrichment pipeline: add a grade column using pd.cut() on marks, extract city codes from a messy address column using str.extract() with regex, create a "seniority" column using pd.qcut() on experience, flag any email that does not match a valid pattern.',
+            qna:[
+              {q:'apply() vs map() vs vectorised str methods — which to use?', a:'str methods (fastest, built-in): df["name"].str.lower(). map() for replacing values via a dict. apply() for custom logic that cannot be vectorised. Prefer str methods > map > apply for performance.', code:'# Fastest:\ndf["name"].str.strip().str.title()\n# apply for custom logic:\ndf["grade"] = df["marks"].apply(get_grade)'},
+              {q:'pd.cut() vs pd.qcut()?', a:'cut() uses fixed edges you define (0-40: F, 41-60: C...). qcut() creates bins with equal number of rows — useful when you want top/bottom 25%.', code:'pd.cut(df["marks"],\n    bins=[0,40,60,75,90,100],\n    labels=["F","C","B","A","A+"])'},
+              {q:'How do I extract part of a string using regex?', a:'Use str.extract() with a capturing group in the pattern.', code:'# Extract 6-digit pincode from address\ndf["pincode"] = df["address"].str.extract(r"(\\d{6})")[0]'},
+            ]
+          },
+          {
+            id:'d30', num:'Day 30', topic:'Pandas project — full EDA on real dataset', badge:'proj',
+            topics:['End-to-end EDA workflow','Load → clean → explore → analyse → answer questions','Use groupby, merge, sort, filter together','Write insights as comments, not just print()','Save clean dataset for visualisation phase','Prepare 5 "business questions" answered by the data'],
+            practical:'Given superstore sales data: clean it fully, then answer: Which category has highest profit margin? Which region has most returned orders? Who are top 10 customers by revenue? What is monthly sales trend? Which product sub-category is loss-making?',
+            qna:[
+              {q:'What is exploratory data analysis (EDA)?', a:'The process of investigating a dataset before building models or dashboards. Goal: understand structure, spot problems, find patterns. Steps: shape, dtypes, nulls, distributions, correlations, group summaries.', code:null},
+              {q:'How do I compute profit margin?', a:'(Profit / Revenue) * 100. With groupby: sum both columns per group, then compute margin on the aggregated values.', code:'summary = df.groupby("category").agg(\n    revenue=("sales","sum"),\n    profit=("profit","sum"))\nsummary["margin"] = summary["profit"] / summary["revenue"] * 100'},
+              {q:'Should I save the clean data after EDA?', a:'Yes — always. Save your clean DataFrame to a new CSV so the visualisation and modelling steps start from clean data, not raw data. Documents your pipeline.', code:'df_clean.to_csv("clean_data.csv", index=False)'},
+            ]
+          },
+        ],
+        assignment: {
+          title:'Week 6 project — full EDA report on real dataset',
+          desc:'Load a real dataset, clean it, answer 5 business questions using groupby and filtering, save clean version.',
+          tasks:['Full cleaning pipeline (build on Week 5 skills)','value_counts() on all categorical columns — document findings','GroupBy analysis: at least 3 different groupby operations','Merge with at least one lookup/master table','Answer 5 specific business questions, each with a print statement explaining the finding','Save clean data to CSV for the visualisation phase']
+        }
+      }
+    ]
+  },
+  {
+    id: 'phase4',
+    label: 'Phase 4 — Matplotlib',
+    color: 'mp',
+    desc: 'Visualisation week. Every chart uses the data students cleaned in Phase 3. Charts must tell a story — a chart that needs a paragraph to explain has failed its job.',
+    stats: [{ val:'1', label:'Week' }, { val:'5', label:'Lectures' }, { val:'1', label:'Dashboard' }],
+    weeks: [
+      {
+        id:'w7', label:'Week 7', title:'Visualisation', tag:'mp',
+        days: [
+          {
+            id:'d31', num:'Day 31', topic:'Line and bar charts', badge:'mp',
+            topics:['plt.figure() and figsize','plt.plot() — basic line chart','plt.bar() and plt.barh()','xlabel, ylabel, title, legend','plt.grid() — alpha parameter','Colors, linestyle, marker','savefig() must come BEFORE show()'],
+            practical:'From the cleaned sales data: plot monthly revenue trend (line chart), revenue by product category (bar chart). Add titles, axis labels, grid, legend. Save both as PNG files.',
+            qna:[
+              {q:'Why must savefig() come before show()?', a:'show() renders and clears the figure buffer. If you call savefig() after show(), you save a blank image. Always save first.', code:'plt.savefig("chart.png", dpi=150)\nplt.show()  # show AFTER saving'},
+              {q:'How do I change the chart size?', a:'Use figsize=(width, height) in inches when creating the figure. For presentations use (12,6). For notebooks use (8,5).', code:'plt.figure(figsize=(12, 5))\nplt.plot(months, revenue)'},
+              {q:'What is alpha in grid?', a:'Transparency (0=invisible, 1=solid). plt.grid(alpha=0.3) adds a subtle background grid that doesn\'t compete with the data.', code:'plt.grid(alpha=0.3, linestyle="--")'},
+            ]
+          },
+          {
+            id:'d32', num:'Day 32', topic:'Scatter, histogram and pie charts', badge:'mp',
+            topics:['plt.scatter() — c= for colour, s= for size','plt.hist() — bins, edgecolor, density, cumulative','plt.axvline() — reference lines on histogram','plt.pie() — autopct, explode, startangle','When to use each chart type','Colour maps: cmap parameter','plt.colorbar() for scatter colour scales'],
+            practical:'Three charts from your dataset: scatter plot of marks vs attendance (colour by pass/fail), histogram of marks distribution with mean line, pie chart of students per city. Each chart should make one clear point.',
+            qna:[
+              {q:'How many bins should a histogram have?', a:'Common rule: sqrt(n) where n is the number of data points. For 200 students: ~14 bins. Too few hides the shape, too many creates noise. Try a few values.', code:'plt.hist(marks, bins=20, edgecolor="white")'},
+              {q:'When should I NOT use a pie chart?', a:'When comparing more than 5 categories (hard to read). When differences are small. Bar charts are almost always clearer than pie charts. Use pie only for simple part-to-whole with 2–4 segments.', code:null},
+              {q:'How do I colour scatter points by category?', a:'Map categories to colours using a dict, then pass the colour list to the c= parameter. Or use a loop to plot each category separately for a proper legend.', code:'colors = {"Pass":"green", "Fail":"red"}\nc = df["result"].map(colors)\nplt.scatter(df["att"], df["marks"], c=c)'},
+            ]
+          },
+          {
+            id:'d33', num:'Day 33', topic:'Subplots and multi-chart dashboards', badge:'mp',
+            topics:['plt.subplots(rows, cols) — fig and axes array','Accessing each ax: axes[0,0], axes[0,1]','ax.plot(), ax.bar(), ax.set_title() — OOP style','tight_layout() — prevent overlap','fig.suptitle() — overall title','axvline, axhline — reference lines','Annotating specific points'],
+            practical:'Build a 2×2 dashboard from your dataset: monthly trend (line), category comparison (bar), mark distribution (histogram), category share (pie). Single figure, single save. Title: "Sales Analysis Dashboard".',
+            qna:[
+              {q:'plt.plot() vs ax.plot() — what is the difference?', a:'Both work but ax.plot() is the OOP style. When using subplots(), always use the ax object (ax.plot, ax.set_title, ax.legend) because you have multiple axes.', code:'fig, axes = plt.subplots(2, 2)\naxes[0,0].plot(x, y)\naxes[0,0].set_title("Revenue Trend")'},
+              {q:'tight_layout() — what does it fix?', a:'Prevents subplots from overlapping each other\'s labels and titles. Always call it before savefig(). Also try constrained_layout=True in subplots().', code:'plt.tight_layout()\nplt.savefig("dashboard.png", dpi=150)'},
+              {q:'How do I add a text annotation to a specific point?', a:'Use ax.annotate() with the text, xy (point to annotate), and xytext (where to put the label).', code:'ax.annotate("Peak",\n    xy=(best_month, peak_val),\n    xytext=(best_month+1, peak_val+10),\n    arrowprops=dict(arrowstyle="->"))'},
+            ]
+          },
+          {
+            id:'d34', num:'Day 34', topic:'Seaborn for statistical plots', badge:'mp',
+            topics:['Why seaborn on top of matplotlib?','sns.set_style() and sns.set_palette()','sns.heatmap() — correlation matrix, annot, cmap','sns.boxplot() — visualising outliers','sns.histplot() with kde=True','sns.barplot() — with confidence intervals','sns.pairplot() — all-vs-all scatter (briefly)'],
+            practical:'From your cleaned dataset: seaborn heatmap of correlation matrix, boxplot showing marks distribution per category (detecting outliers), histplot with KDE for the main numeric column. The heatmap is a must-have for every portfolio project.',
+            qna:[
+              {q:'What does a correlation heatmap tell me?', a:'How strongly each pair of numeric columns are related (–1 to +1). Values close to +1 mean they move together, –1 means opposite, 0 means no relationship. Red=positive, blue=negative in coolwarm.', code:'corr = df.select_dtypes("number").corr()\nsns.heatmap(corr, annot=True, cmap="coolwarm")'},
+              {q:'What does a boxplot show?', a:'The middle 50% of data (box), median (line), full range (whiskers), and outliers (dots). Immediately shows if a column has outliers and how spread the data is.', code:null},
+              {q:'sns.barplot vs plt.bar — what is the difference?', a:'sns.barplot() automatically adds 95% confidence interval error bars — it is a statistical plot. plt.bar() is a plain chart. Use seaborn when you want to show uncertainty, matplotlib when you just want raw values.', code:null},
+            ]
+          },
+          {
+            id:'d35', num:'Day 35', topic:'Pandas plotting and Week 7 dashboard project', badge:'proj',
+            topics:['df.plot() — uses matplotlib under the hood','df["col"].plot.hist(), plot.scatter(), plot.bar()','When to use pandas plot vs matplotlib directly','Combining both in one figure','Style sheets: plt.style.use()','Full dashboard: 4 charts in one figure','Save to PNG at 150 dpi'],
+            practical:'Final visualisation project: build a complete 4-chart analyst dashboard from your Phase 3 dataset. Each chart must have title, axis labels, and tell a specific insight. Save as dashboard.png. This goes in their portfolio.',
+            qna:[
+              {q:'When to use df.plot() vs plt directly?', a:'df.plot() is a quick shortcut — great for exploratory analysis in notebooks. For final presentation-quality charts, use plt or the ax object directly for more control over every detail.', code:'# Quick exploration:\ndf["revenue"].plot(kind="line")\n# For portfolio:\nfig, ax = plt.subplots()\nax.plot(months, revenue, ...)'},
+              {q:'How do I change the overall chart style?', a:'plt.style.use() before plotting. Popular choices: "seaborn-v0_8", "ggplot", "dark_background", "bmh". Call once at the top of your script.', code:'plt.style.use("seaborn-v0_8")\n# all subsequent charts use this style'},
+              {q:'What dpi should I save figures at?', a:'72 dpi for web/notebook display. 150 dpi for portfolio presentations. 300 dpi for print. Higher dpi = larger file size. 150 is a good default.', code:'plt.savefig("chart.png", dpi=150, bbox_inches="tight")'},
+            ]
+          },
+        ],
+        assignment: {
+          title:'Week 7 project — analyst dashboard',
+          desc:'Build a publication-quality 4-chart dashboard from your Phase 3 cleaned dataset.',
+          tasks:['Chart 1: line chart showing a trend over time (monthly, weekly, or daily)','Chart 2: bar chart comparing a metric across categories','Chart 3: histogram or boxplot showing a distribution','Chart 4: heatmap or pie chart for correlation or composition','All charts in one figure using subplots(2,2)','Titles, axis labels, legend on every chart','Save as dashboard.png at 150 dpi — this is a portfolio piece']
+        }
+      }
+    ]
+  },
+  {
+    id: 'phase5',
+    label: 'Phase 5 — SQL + Capstone',
+    color: 'sq',
+    desc: 'Connect Python to SQL — the student who knows SQL will shine here. End the course with a job-ready portfolio project that demonstrates the complete analyst skill set.',
+    stats: [{ val:'1', label:'Week' }, { val:'5', label:'Lectures' }, { val:'1', label:'Capstone' }],
+    weeks: [
+      {
+        id:'w8', label:'Week 8', title:'Job ready', tag:'sq',
+        days: [
+          {
+            id:'d36', num:'Day 36', topic:'SQL basics via Python — sqlite3', badge:'sq',
+            topics:['Why SQL + Python together?','sqlite3 — built into Python','CREATE TABLE, INSERT, SELECT','WHERE, ORDER BY, LIMIT','Fetching results into a DataFrame','pd.read_sql() shortcut','Basic aggregations in SQL: COUNT, SUM, AVG, GROUP BY'],
+            practical:'Create a SQLite database from your student dataset: define the schema, insert all rows, then query it — top 10 by marks, average per city, count by grade. Fetch results into a DataFrame and print.',
+            qna:[
+              {q:'Why learn SQL if I already know pandas?', a:'Real company data lives in SQL databases — not CSV files. SQL filters data before loading into Python (much faster for huge tables). Every analyst job interview includes SQL. They are complementary tools.', code:null},
+              {q:'How do I query a database into a pandas DataFrame?', a:'Use pd.read_sql() — pass the SQL query and the connection. You get a DataFrame directly.', code:'conn = sqlite3.connect("school.db")\ndf = pd.read_sql(\n    "SELECT * FROM students WHERE marks > 60",\n    conn)'},
+              {q:'What is the difference between WHERE and HAVING?', a:'WHERE filters before grouping (filters individual rows). HAVING filters after grouping (filters group results). Use HAVING to filter on aggregate values like average marks.', code:'SELECT city, AVG(marks)\nFROM students\nGROUP BY city\nHAVING AVG(marks) > 70'},
+            ]
+          },
+          {
+            id:'d37', num:'Day 37', topic:'SQL + pandas — same operations, two tools', badge:'sq',
+            topics:['GROUP BY in SQL vs groupby() in pandas','JOIN in SQL vs merge() in pandas','Subqueries vs chained pandas operations','When to do it in SQL vs Python','Window functions briefly (ROW_NUMBER)','Writing SQL from a pandas operation','Translating analyst questions to both SQL and pandas'],
+            practical:'Implement the same 5 analyses from Phase 3 in BOTH SQL and pandas. Side-by-side comparison printed to console. Which was shorter? Which was more readable? Students write their findings in comments.',
+            qna:[
+              {q:'Should I use SQL or pandas for analysis?', a:'SQL: when data lives in a database, for initial filtering and aggregation on large tables, for joins across many tables. Pandas: for complex transformations, statistical operations, visualisation prep. Real workflow: SQL to extract and filter, Pandas to transform and analyse.', code:null},
+              {q:'How do I do a pandas operation and express it as SQL?', a:'Think of a DataFrame as a table. SELECT = column selection. WHERE = boolean filter. GROUP BY = groupby. JOIN = merge. ORDER BY = sort_values. LIMIT = head(N).', code:'# pandas:\ndf[df["city"]=="Mumbai"].groupby("dept")["salary"].mean()\n# SQL:\n# SELECT dept, AVG(salary) FROM emp\n# WHERE city="Mumbai" GROUP BY dept'},
+              {q:'What is a window function?', a:'A function that computes a value for each row based on a "window" of related rows — without collapsing to a group. Example: rank each student within their class. In pandas this is transform(rank).', code:'df["class_rank"] = df.groupby("class")["marks"].transform(\n    lambda x: x.rank(ascending=False))'},
+            ]
+          },
+          {
+            id:'d38', num:'Day 38', topic:'Capstone project kick-off', badge:'proj',
+            topics:['Capstone brief and dataset selection','Project planning: 5 business questions first','Data source options: Kaggle, data.gov.in, UCI ML repo','Defining success: what does "done" look like?','Structure: notebook or .py files?','Timeline: Day 38 plan, Day 39 build, Day 40 present','Peer pairing — one SQL student per group'],
+            practical:'Students pick their dataset, define 5 business questions they will answer, plan their 4-chart dashboard layout, and write a project README before touching any code. You review each plan and give feedback.',
+            qna:[
+              {q:'How do I choose a good capstone dataset?', a:'Pick something you find genuinely interesting. Minimum 1000 rows, at least 5 columns, has at least one datetime and one categorical column. Good options: IPL data, Zomato restaurants, Netflix movies, Flipkart products, COVID-19 India.', code:null},
+              {q:'What makes a good business question?', a:'Answerable from the data, specific, and meaningful. Bad: "What are the trends?" Good: "Which product category had the highest revenue growth in Q4?" A good question leads to one specific analysis.', code:null},
+              {q:'Should the capstone be a Jupyter notebook or .py files?', a:'Notebook (.ipynb) for portfolio — recruiters view these on GitHub. Clear cell structure: load → clean → analyse → visualise. Each section starts with a markdown cell explaining what and why.', code:null},
+            ]
+          },
+          {
+            id:'d39', num:'Day 39', topic:'Capstone work session + code review', badge:'proj',
+            topics:['Guided work session — you review code one-on-one','Common fixes: null handling, column naming, chart labels','Teaching the difference between correlation and causation','Writing insight sentences, not just printing numbers','Code comments: explain WHY not just WHAT','Checking for hardcoded values that should be variables'],
+            practical:'Students work on capstone projects. Teacher reviews 2–3 key things per student: (1) is the cleaning correct, (2) do the charts have titles and labels, (3) are the insights written as sentences, not just print(df.head()).',
+            qna:[
+              {q:'How do I write a good insight from a chart?', a:'"Sales in Q4 were 34% higher than Q1, driven by Electronics which grew 2.1x" is an insight. "Here is the sales chart" is not. Every chart should have one insight sentence in the notebook.', code:null},
+              {q:'What is correlation vs causation?', a:'Correlation: two things move together. Causation: one causes the other. Ice cream sales and drowning rates are correlated (both peak in summer) — but ice cream does not cause drowning. Always ask: is there a hidden third factor?', code:null},
+              {q:'My notebook runs but has errors when someone else opens it?', a:'Common causes: hardcoded file paths, missing libraries in requirements.txt, running cells out of order. Always restart kernel and run all cells before submitting.', code:null},
+            ]
+          },
+          {
+            id:'d40', num:'Day 40', topic:'Presentations, certificates and what comes next', badge:'proj',
+            topics:['Student presentations: 5 minutes each','Peer feedback: one thing they liked, one suggestion','Teacher feedback: technical correctness + storytelling','What to learn next: SQL deeper, Power BI, Statistics, Scikit-learn','Building a portfolio on GitHub','How to describe this project in a job interview'],
+            practical:'Each student presents their capstone (5 min). Class gives structured feedback. Teacher shows how to push the notebook to GitHub Pages as a portfolio piece. End with a roadmap: what a junior data analyst learns in their first 6 months on the job.',
+            qna:[
+              {q:'What should I learn after this course?', a:'1. SQL deeper — JOIN types, subqueries, CTEs, window functions. 2. Statistics for analysts — hypothesis testing, A/B testing basics. 3. Power BI or Tableau for dashboards. 4. Scikit-learn basics — linear regression, classification. 5. Git and GitHub.', code:null},
+              {q:'How do I describe this project in an interview?', a:'"I built an end-to-end data analysis pipeline in Python using Pandas and Matplotlib. I cleaned a dataset of X rows, performed [specific analyses], and built a dashboard answering [specific business questions]. The key finding was [insight]."', code:null},
+              {q:'What SQL topics are most important for an analyst?', a:'GROUP BY with HAVING, all JOIN types (especially LEFT), subqueries, CTEs (WITH clause), window functions (ROW_NUMBER, RANK, LAG), date functions. These cover 90% of analyst interview SQL questions.', code:null},
+            ]
+          },
+        ],
+        assignment: {
+          title:'Final capstone project — end-to-end data analysis',
+          desc:'A complete, job-portfolio-ready analysis project on a real dataset of the student\'s choice.',
+          tasks:['Choose a real dataset (min 1000 rows, at least 5 columns)','Write 5 specific business questions before starting','Full cleaning pipeline — zero nulls, correct dtypes, no duplicates','GroupBy analysis answering all 5 business questions','4-chart dashboard in a single matplotlib figure','SQL: at least 2 of the 5 questions answered using sqlite3','Jupyter notebook with markdown explanations, not just code','Push to GitHub — this is your portfolio piece']
+        }
+      }
+    ]
+  }
+];
+
+// ─────────────────────────────────────────────
+//  STATE
+// ─────────────────────────────────────────────
+let currentPhase = 'phase1';
+let checkedTopics = JSON.parse(localStorage.getItem('py_checked') || '{}');
+let openDays = {};
+let activeTabs = {};
+
+function saveChecked() {
+  localStorage.setItem('py_checked', JSON.stringify(checkedTopics));
+}
+
+function totalTopics() {
+  let t = 0;
+  curriculum.forEach(p => p.weeks.forEach(w => w.days.forEach(d => t += d.topics.length)));
+  return t;
+}
+
+function doneTopics() {
+  return Object.values(checkedTopics).filter(Boolean).length;
+}
+
+// ─────────────────────────────────────────────
+//  SIDEBAR
+// ─────────────────────────────────────────────
+function buildSidebar() {
+  const nav = document.getElementById('phase-nav');
+  nav.innerHTML = curriculum.map(phase => `
+    <div class="phase-section">
+      <button class="phase-btn ${phase.id === currentPhase ? 'active' : ''} p-${phase.color}"
+              onclick="setPhase('${phase.id}')">
+        <span class="phase-dot phase-dot-${phase.color}"></span>
+        ${phase.label}
+      </button>
+      ${phase.weeks.map(w => {
+        const wDone = w.days.every(d => d.topics.every((_, ti) => checkedTopics[`${d.id}-${ti}`]));
+        return `
+        <div class="week-item ${phase.id === currentPhase ? '' : 'dimmed'}"
+             onclick="setPhase('${phase.id}'); scrollToWeek('${w.id}')">
+          ${w.label} — ${w.title}
+          <span class="week-check ${wDone ? 'done' : ''}">✓</span>
+        </div>`;
+      }).join('')}
+    </div>
+  `).join('');
+}
+
+function updateProgress() {
+  const done = doneTopics();
+  const total = totalTopics();
+  const pct = Math.round(done / total * 100);
+  document.getElementById('prog-label').textContent = `${done} / ${total}`;
+  document.getElementById('prog-fill').style.width = pct + '%';
+}
+
+// ─────────────────────────────────────────────
+//  MAIN CONTENT
+// ─────────────────────────────────────────────
+function buildMain() {
+  const phase = curriculum.find(p => p.id === currentPhase);
+  const main = document.getElementById('main-content');
+
+  main.innerHTML = `
+    <div class="phase-header">
+      <div class="phase-eyebrow">Phase ${curriculum.indexOf(phase) + 1} of ${curriculum.length}</div>
+      <div class="phase-title">${phase.label}</div>
+      <div class="phase-desc">${phase.desc}</div>
+      <div class="phase-stats">
+        ${phase.stats.map(s => `
+          <div class="phase-stat">
+            <div class="phase-stat-val">${s.val}</div>
+            <div class="phase-stat-label">${s.label}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+    ${phase.weeks.map(w => buildWeek(w)).join('')}
+  `;
+}
+
+function buildWeek(week) {
+  return `
+    <div class="week-block" id="${week.id}">
+      <div class="week-header">
+        <span class="week-num">${week.label}</span>
+        <span class="week-title">${week.title}</span>
+        <span class="week-tag tag-${week.tag}">${week.tag.toUpperCase()}</span>
+      </div>
+      ${week.days.map(d => buildDayCard(d)).join('')}
+      ${buildAssignment(week.assignment)}
+    </div>
+  `;
+}
+
+function buildDayCard(day) {
+  const isOpen = openDays[day.id];
+  const activeTab = activeTabs[day.id] || 'topics';
+  return `
+    <div class="day-card ${isOpen ? 'open' : ''}" id="card-${day.id}">
+      <div class="day-card-header" onclick="toggleDay('${day.id}')">
+        <span class="day-number">${day.num}</span>
+        <span class="day-topic">${day.topic}</span>
+        <span class="day-badge badge-${day.badge}">${day.badge.toUpperCase()}</span>
+        <span class="day-chevron">▼</span>
+      </div>
+      <div class="day-body">
+        <div class="tab-row">
+          ${['topics','practical','qna'].map(t => `
+            <button class="tab-btn ${activeTab === t ? 'active' : ''}"
+                    onclick="setTab('${day.id}','${t}')">
+              ${t.charAt(0).toUpperCase() + t.slice(1)}
+            </button>
+          `).join('')}
+        </div>
+        <div class="tab-content ${activeTab === 'topics' ? 'active' : ''}" id="${day.id}-topics">
+          ${buildTopics(day)}
+        </div>
+        <div class="tab-content ${activeTab === 'practical' ? 'active' : ''}" id="${day.id}-practical">
+          ${buildPractical(day)}
+        </div>
+        <div class="tab-content ${activeTab === 'qna' ? 'active' : ''}" id="${day.id}-qna">
+          ${buildQnA(day)}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function buildTopics(day) {
+  return `<ul class="topic-list">
+    ${day.topics.map((t, i) => {
+      const key = `${day.id}-${i}`;
+      const done = checkedTopics[key];
+      return `<li class="topic-item">
+        <button class="topic-check-btn ${done ? 'done' : ''}"
+                onclick="toggleTopic('${day.id}',${i})">✓</button>
+        <span class="topic-text ${done ? 'done' : ''}">${t}</span>
+      </li>`;
+    }).join('')}
+  </ul>`;
+}
+
+function buildPractical(day) {
+  return `
+    <div class="practical-box">
+      <div class="practical-label">Exercise</div>
+      <div class="practical-text">${day.practical}</div>
+    </div>
+  `;
+}
+
+function buildQnA(day) {
+  return day.qna.map((q, i) => `
+    <div class="qna-item">
+      <div class="qna-q">
+        <span class="qna-q-label">Q${i+1}</span>
+        ${q.q}
+      </div>
+      <div class="qna-a">
+        ${q.a}
+        ${q.code ? `<code class="qna-code">${q.code.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</code>` : ''}
+      </div>
+    </div>
+  `).join('');
+}
+
+function buildAssignment(a) {
+  return `
+    <div class="assignment-card">
+      <div class="assignment-eyebrow">Weekly Assignment</div>
+      <div class="assignment-title">${a.title}</div>
+      <div class="assignment-desc">${a.desc}</div>
+      <ul class="assignment-tasks">
+        ${a.tasks.map((t, i) => `
+          <li class="assignment-task">
+            <span class="task-num">${String(i+1).padStart(2,'0')}.</span>
+            ${t}
+          </li>
+        `).join('')}
+      </ul>
+    </div>
+  `;
+}
+
+// ─────────────────────────────────────────────
+//  INTERACTIONS
+// ─────────────────────────────────────────────
+function setPhase(id) {
+  currentPhase = id;
+  buildSidebar();
+  buildMain();
+  document.getElementById('main-content').scrollTop = 0;
+}
+
+function toggleDay(id) {
+  openDays[id] = !openDays[id];
+  const card = document.getElementById(`card-${id}`);
+  card.classList.toggle('open', openDays[id]);
+  card.querySelector('.day-body').style.display = openDays[id] ? 'block' : 'none';
+}
+
+function setTab(dayId, tab) {
+  activeTabs[dayId] = tab;
+  const body = document.querySelector(`#card-${dayId} .day-body`);
+  body.querySelectorAll('.tab-btn').forEach(b => {
+    b.classList.toggle('active', b.textContent.trim().toLowerCase() === tab);
+  });
+  body.querySelectorAll('.tab-content').forEach(c => {
+    c.classList.toggle('active', c.id === `${dayId}-${tab}`);
+  });
+}
+
+function toggleTopic(dayId, idx) {
+  const key = `${dayId}-${idx}`;
+  checkedTopics[key] = !checkedTopics[key];
+  saveChecked();
+  updateProgress();
+  // Update the specific button
+  const card = document.getElementById(`card-${dayId}`);
+  if (!card) return;
+  const items = card.querySelectorAll('.topic-item');
+  if (items[idx]) {
+    const btn = items[idx].querySelector('.topic-check-btn');
+    const txt = items[idx].querySelector('.topic-text');
+    btn.classList.toggle('done', checkedTopics[key]);
+    txt.classList.toggle('done', checkedTopics[key]);
+  }
+  buildSidebar();
+}
+
+function scrollToWeek(weekId) {
+  setTimeout(() => {
+    const el = document.getElementById(weekId);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 50);
+}
+
+// ─────────────────────────────────────────────
+//  INIT
+// ─────────────────────────────────────────────
+buildSidebar();
+buildMain();
+updateProgress();
+
+// Re-apply open state after build
+document.querySelectorAll('.day-body').forEach(b => b.style.display = 'none');
+</script>
+</body>
+</html>
