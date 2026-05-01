@@ -18,3 +18,9 @@ with open("data.json", "w") as f:
 with open("data.json", "r") as f:
     data = json.load(f)
     print(data)
+
+    """
+dump() → save to file
+load() → read from file
+dumps() → just convert to string
+    """
