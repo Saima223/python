@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Python for Data Analysts — Complete Curriculum</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#fafaf8;--surface:#ffffff;--surface2:#f4f3ef;--surface3:#ece9e2;
+  --border:#e2dfd8;--border2:#d0ccc3;
+  --ink:#1a1916;--ink2:#5a5750;--ink3:#9a9490;
+  --py:#2563eb;--py-bg:#eff6ff;--py-light:#dbeafe;
+  --np:#16a34a;--np-bg:#f0fdf4;--np-light:#dcfce7;
+  --mp:#d97706;--mp-bg:#fffbeb;--mp-light:#fef3c7;
+  --pd:#7c3aed;--pd-bg:#faf5ff;--pd-light:#ede9fe;
+  --accent:#e85d3a;
+  --font:'Syne',sans-serif;
+  --mono:'JetBrains Mono',monospace;
+  --serif:'Instrument Serif',serif;
+  --radius:10px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--bg);color:var(--ink);font-size:14px;line-height:1.6}
+
+/* ── LAYOUT ── */
+.wrap{display:flex;min-height:100vh}
+.sidebar{width:280px;min-width:280px;background:var(--ink);position:sticky;top:0;height:100vh;display:flex;flex-direction:column;overflow:hidden}
+.main{flex:1;overflow-y:auto;max-width:900px;padding:48px 48px 80px}
+
+/* ── SIDEBAR ── */
+.sb-head{padding:28px 24px 20px}
+.sb-logo{font-family:var(--serif);font-style:italic;font-size:22px;color:#fff;margin-bottom:2px}
+.sb-sub{font-size:10px;color:#666;letter-spacing:0.1em;text-transform:uppercase}
+.sb-stats{display:flex;gap:12px;padding:12px 24px;border-top:1px solid #2a2a2a;border-bottom:1px solid #2a2a2a;flex-shrink:0}
+.sb-stat{text-align:center}
+.sb-stat-n{font-size:20px;font-weight:700;color:#fff;font-family:var(--mono)}
+.sb-stat-l{font-size:9px;color:#555;text-transform:uppercase;letter-spacing:0.06em}
+
+.sb-prog{padding:14px 24px;border-bottom:1px solid #2a2a2a;flex-shrink:0}
+.sb-prog-row{display:flex;justify-content:space-between;font-size:10px;color:#555;margin-bottom:6px;letter-spacing:0.04em}
+.sb-prog-bar{height:3px;background:#2a2a2a;border-radius:2px;overflow:hidden}
+.sb-prog-fill{height:100%;background:linear-gradient(90deg,var(--py),var(--np),var(--pd));border-radius:2px;transition:width .4s}
+
+.sb-nav{overflow-y:auto;flex:1;padding:8px 0 24px}
+.sb-nav::-webkit-scrollbar{width:3px}
+.sb-nav::-webkit-scrollbar-track{background:transparent}
+.sb-nav::-webkit-scrollbar-thumb{background:#333;border-radius:2px}
+
+.sb-track{padding:8px 24px 4px;font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#444}
+.sb-item{display:flex;align-items:center;gap:10px;padding:6px 24px;cursor:pointer;transition:background .15s;border-left:2px solid transparent}
+.sb-item:hover{background:#1a1a1a}
+.sb-item.active{background:#1a1a1a;border-left-color:var(--accent)}
+.sb-item-num{font-family:var(--mono);font-size:10px;color:#444;min-width:22px;flex-shrink:0}
+.sb-item-label{font-size:12px;color:#999;line-height:1.3;flex:1}
+.sb-item.active .sb-item-label{color:#fff}
+.sb-check{width:14px;height:14px;border-radius:3px;border:1px solid #333;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:8px}
+.sb-check.done{background:var(--np);border-color:var(--np);color:#fff}
+
+/* ── PAGE HEADER ── */
+.pg-header{margin-bottom:40px}
+.pg-eyebrow{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.pg-track-badge{font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:3px 10px;border-radius:20px}
+.badge-py{background:var(--py-light);color:var(--py)}
+.badge-np{background:var(--np-light);color:var(--np)}
+.badge-mp{background:var(--mp-light);color:var(--mp)}
+.badge-pd{background:var(--pd-light);color:var(--pd)}
+.pg-num{font-family:var(--mono);font-size:11px;color:var(--ink3)}
+.pg-title{font-family:var(--serif);font-style:italic;font-size:40px;color:var(--ink);line-height:1.1;margin-bottom:8px}
+.pg-subtitle{font-size:13px;color:var(--ink2);font-weight:400}
+.pg-divider{height:1px;background:var(--border);margin-top:24px}
+
+/* ── TABS ── */
+.tab-row{display:flex;gap:4px;margin-bottom:28px;border-bottom:2px solid var(--border);padding-bottom:0}
+.tab-btn{padding:8px 18px;font-family:var(--font);font-size:12px;font-weight:600;color:var(--ink3);background:none;border:none;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;letter-spacing:0.02em;transition:color .15s}
+.tab-btn:hover{color:var(--ink)}
+.tab-btn.active{color:var(--ink);border-bottom-color:var(--ink)}
+.tab-content{display:none}
+.tab-content.active{display:block}
+
+/* ── TOPICS ── */
+.topic-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.topic-item{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;background:var(--surface2);border-radius:var(--radius);border:1px solid var(--border);cursor:pointer;transition:border-color .15s}
+.topic-item:hover{border-color:var(--border2)}
+.topic-cb{width:16px;height:16px;border-radius:4px;border:1.5px solid var(--border2);flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;font-size:9px;transition:all .15s}
+.topic-cb.done{background:var(--np);border-color:var(--np);color:#fff}
+.topic-txt{font-size:12px;color:var(--ink2);line-height:1.4;flex:1}
+.topic-txt.done{text-decoration:line-through;color:var(--ink3)}
+
+/* ── QNA ── */
+.qna-list{display:flex;flex-direction:column;gap:0}
+.qna-item{border-bottom:1px solid var(--border);padding:20px 0}
+.qna-item:last-child{border-bottom:none}
+.qna-q{display:flex;gap:12px;align-items:flex-start;margin-bottom:10px}
+.qna-q-tag{background:var(--accent);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;flex-shrink:0;margin-top:1px;font-family:var(--mono)}
+.qna-q-text{font-size:14px;font-weight:600;color:var(--ink);line-height:1.5}
+.qna-a{font-size:13px;color:var(--ink2);line-height:1.7;padding-left:44px;margin-bottom:8px}
+.qna-code{font-family:var(--mono);font-size:11.5px;background:var(--ink);color:#d4d0c8;padding:14px 16px;border-radius:8px;margin-left:44px;line-height:1.8;overflow-x:auto;white-space:pre;border:1px solid #2a2a2a}
+.code-comment{color:#666}
+.code-kw{color:#82aaff}
+.code-str{color:#c3e88d}
+.code-num{color:#f78c6c}
+.code-fn{color:#89ddff}
+
+/* ── ASSIGNMENT ── */
+.assign-card{background:var(--ink);border-radius:14px;padding:32px 36px;margin-top:8px;position:relative;overflow:hidden}
+.assign-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--py),var(--np),var(--pd))}
+.assign-eyebrow{font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#555;margin-bottom:10px}
+.assign-title{font-family:var(--serif);font-style:italic;font-size:24px;color:#fff;margin-bottom:10px}
+.assign-desc{font-size:13px;color:#888;line-height:1.7;margin-bottom:20px}
+.assign-tasks{list-style:none}
+.assign-task{display:flex;gap:12px;padding:9px 0;border-bottom:1px solid #252525;font-size:13px;color:#aaa;align-items:flex-start;line-height:1.5}
+.assign-task:last-child{border-bottom:none}
+.assign-task-n{font-family:var(--mono);font-size:10px;color:#444;min-width:24px;padding-top:2px;flex-shrink:0}
+
+/* ── NAV CONTROLS ── */
+.pg-nav{display:flex;justify-content:space-between;align-items:center;margin-top:48px;padding-top:28px;border-top:1px solid var(--border)}
+.nav-btn{display:flex;align-items:center;gap:8px;padding:10px 20px;border-radius:8px;border:1px solid var(--border2);background:var(--surface);cursor:pointer;font-family:var(--font);font-size:13px;font-weight:600;color:var(--ink2);transition:all .15s}
+.nav-btn:hover{border-color:var(--ink);color:var(--ink)}
+.nav-btn.primary{background:var(--ink);color:#fff;border-color:var(--ink)}
+.nav-btn.primary:hover{background:#333}
+.nav-btn:disabled{opacity:0.3;cursor:not-allowed}
+.pg-pos{font-size:12px;color:var(--ink3);font-family:var(--mono)}
+
+/* ── WELCOME SCREEN ── */
+.welcome{padding:0}
+.welcome-hero{background:var(--ink);border-radius:16px;padding:48px;margin-bottom:32px;position:relative;overflow:hidden}
+.welcome-hero::after{content:'';position:absolute;bottom:-60px;right:-60px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,0.02)}
+.welcome-tag{font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#555;margin-bottom:16px}
+.welcome-title{font-family:var(--serif);font-style:italic;font-size:48px;color:#fff;line-height:1.1;margin-bottom:14px}
+.welcome-desc{font-size:15px;color:#888;line-height:1.7;max-width:500px}
+.welcome-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:32px}
+.track-card{border-radius:12px;padding:24px;border:1px solid var(--border)}
+.tc-py{background:var(--py-bg);border-color:var(--py-light)}
+.tc-np{background:var(--np-bg);border-color:var(--np-light)}
+.tc-mp{background:var(--mp-bg);border-color:var(--mp-light)}
+.tc-pd{background:var(--pd-bg);border-color:var(--pd-light)}
+.tc-title{font-size:15px;font-weight:700;margin-bottom:4px}
+.tc-py .tc-title{color:var(--py)}
+.tc-np .tc-title{color:var(--np)}
+.tc-mp .tc-title{color:var(--mp)}
+.tc-pd .tc-title{color:var(--pd)}
+.tc-sub{font-size:12px;color:var(--ink2);margin-bottom:12px}
+.tc-mods{font-size:11px;color:var(--ink3)}
+.start-btn{width:100%;padding:14px;border-radius:10px;background:var(--ink);color:#fff;border:none;font-family:var(--font);font-size:14px;font-weight:700;cursor:pointer;letter-spacing:0.02em;transition:background .15s}
+.start-btn:hover{background:#333}
+
+@media(max-width:900px){
+  .sidebar{display:none}
+  .main{padding:24px 16px 60px}
+  .topic-grid{grid-template-columns:1fr}
+  .welcome-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<aside class="sidebar" id="sidebar">
+  <div class="sb-head">
+    <div class="sb-logo">Python for Analysts</div>
+    <div class="sb-sub">Complete Curriculum · 23 Modules</div>
+  </div>
+  <div class="sb-stats">
+    <div class="sb-stat"><div class="sb-stat-n">23</div><div class="sb-stat-l">Modules</div></div>
+    <div class="sb-stat"><div class="sb-stat-n" id="done-n">0</div><div class="sb-stat-l">Done</div></div>
+    <div class="sb-stat"><div class="sb-stat-n" id="pct-n">0%</div><div class="sb-stat-l">Progress</div></div>
+  </div>
+  <div class="sb-prog">
+    <div class="sb-prog-row"><span>COMPLETION</span><span id="prog-label">0 / 0 topics</span></div>
+    <div class="sb-prog-bar"><div class="sb-prog-fill" id="prog-fill" style="width:0%"></div></div>
+  </div>
+  <nav class="sb-nav" id="sb-nav"></nav>
+</aside>
+
+<main class="main" id="main-content">
+  <div id="page-welcome"></div>
+  <div id="page-module" style="display:none"></div>
+</main>
+
+</div>
+
+<script>
+const MODULES = [
+  {id:"m01",num:"01",title:"Python Fundamentals",subtitle:"Intro, Syntax, Comments, Variables",track:"py",
+   topics:["What is Python and why data analysts use it","Installing Python, VS Code, and running your first script","Python syntax: indentation as blocks (no curly braces)","print() — the first function everyone learns","Comments: # single line and ''' triple quote docstrings '''","Variables: dynamic typing — no type declaration needed","Variable naming conventions: snake_case","Multiple assignment: a, b = 1, 2","del keyword to remove a variable","The id() function — checking object identity","Python as a calculator: basic math in REPL"],
+   qna:[
+     {q:"Why doesn't Python use { } for code blocks?",a:"Python uses indentation (4 spaces or 1 tab) to define blocks. This forces readable code — a wrong indent is a SyntaxError. There is no choice: Python's style IS the language.",code:"if x > 0:\n    print(x)   # indented = inside block\nprint('done')  # not indented = outside block"},
+     {q:"What is dynamic typing?",a:"Python figures out the type at runtime from the value you assign. You don't write 'int x = 5'. Just write x = 5 and Python creates an int. The same variable can hold a different type later.",code:"x = 5        # x is now int\nprint(type(x))  # <class 'int'>\nx = 'hello'  # x is now str — legal!\nprint(type(x))  # <class 'str'>"},
+     {q:"What is the difference between # and ''' for comments?",a:"# is an inline comment — everything after it on that line is ignored. ''' triple quotes create a multi-line string (not a true comment) that is typically used as a docstring to document a function or module.",code:"# This is a comment\n\ndef analyse(data):\n    '''\n    This function analyses data.\n    Returns a summary dict.\n    '''\n    pass"},
+     {q:"When should I use del?",a:"del removes the binding between a variable name and its object. The object gets garbage collected if nothing else refers to it. Rarely needed in normal code — mostly used to free large datasets from memory.",code:"large_data = [x for x in range(1_000_000)]\n# ... use large_data ...\ndel large_data  # free memory\n# print(large_data)  # NameError now"}
+   ],
+   assignment:{title:"Hello Data World",desc:"Write a Python script that introduces yourself as a data analyst.",tasks:["Create 5 variables: name (str), age (int), city (str), experience (float), is_employed (bool)","Print a formatted introduction card using each variable","Add a triple-quote docstring at the top describing the script's purpose","Use multiple assignment: track, level = 'Data Analytics', 'Beginner'","Print type() and id() of each variable in a loop","Demonstrate that two variables assigned the same string literal share an id (small string interning)"]}
+  },
+  {id:"m02",num:"02",title:"Data Types & Numbers",subtitle:"Data Types, Numbers, Casting",track:"py",
+   topics:["5 core types: int, float, str, bool, None","type() to inspect any value","isinstance() for type checking","int: whole numbers, arbitrary precision in Python 3","float: IEEE 754, precision issues with 0.1+0.2","Arithmetic: +, -, *, /, //, %, **","round(), abs(), divmod()","Casting: int(), float(), str(), bool()","int() truncates (does NOT round)","NaN and infinity in float","Complex numbers: 3+4j (brief)","The decimal module for financial precision"],
+   qna:[
+     {q:"Why does 0.1 + 0.2 not equal 0.3?",a:"Floats use binary (base-2) representation internally. 0.1 cannot be stored exactly in binary — similar to 1/3 in decimal. Use round() for display or the decimal module for financial calculations.",code:"print(0.1 + 0.2)          # 0.30000000000000004\nprint(round(0.1+0.2, 2))  # 0.3\n\nfrom decimal import Decimal\nDecimal('0.1') + Decimal('0.2')  # Exactly 0.3"},
+     {q:"int() truncates — but what exactly does that mean?",a:"int() removes the decimal part by moving toward zero. It does NOT round. 89.9 becomes 89. -3.9 becomes -3 (toward zero, not -4). Use round() when you want proper rounding.",code:"int(89.9)     # 89  — decimal dropped\nint(-3.9)     # -3  — toward zero!\nround(89.9)   # 90  — properly rounded\nround(-3.9)   # -4  — properly rounded"},
+     {q:"What is None and how is it different from 0 or ''?",a:"None means 'no value exists'. 0 means the value zero. '' means empty text. None is its own type (NoneType). Always check for None with 'is None', not == None.",code:"result = None           # no value yet\nprint(result is None)   # True — correct check\nprint(result == None)   # True but avoid this\nprint(bool(None))       # False — falsy"},
+     {q:"What does divmod() return?",a:"divmod(a, b) returns (quotient, remainder) as a tuple — equivalent to (a//b, a%b) but computed in one operation. Useful for converting seconds to hours/minutes, or checking even/odd.",code:"q, r = divmod(17, 5)\nprint(q, r)  # 3 2   meaning: 17 = 3×5 + 2\n\n# Convert seconds to h:m:s\ntotal = 3661\nh, rem = divmod(total, 3600)\nm, s = divmod(rem, 60)\nprint(f'{h}h {m}m {s}s')  # 1h 1m 1s"}
+   ],
+   assignment:{title:"Financial Calculator",desc:"Build a calculator demonstrating all number operations.",tasks:["Loan calculator: principal, rate%, years → simple interest, compound interest, monthly EMI","Format all money with ₹ symbol, commas, 2 decimal places: f'{amount:,.2f}'","Use divmod() to express loan duration in 'X years Y months' format","Demonstrate float precision issue (0.1+0.2) and fix with round() and Decimal","Tax calculator: income → tax using slabs (if/elif: 0% up to 2.5L, 5% up to 5L, 10% up to 10L, 20% above)","Use isinstance() to validate that all inputs are the correct type before computing"]}
+  },
+  {id:"m03",num:"03",title:"Strings & Formatting",subtitle:"Strings, String Formatting, User Input",track:"py",
+   topics:["String creation: single, double, triple quotes","String immutability — cannot modify in place","Indexing: s[0], s[-1]","Slicing: s[start:stop:step]","Key methods: upper, lower, strip, lstrip, rstrip, split, join, replace, find, count","startswith(), endswith(), in operator","f-strings: f'{name}' and f'{value:.2f}'","format() method","String alignment: ljust, rjust, center, zfill","input() always returns a string","String multiplication: '-' * 40","Escape characters: \\n, \\t, \\\\"],
+   qna:[
+     {q:"Python has no char type — what is 'a' then?",a:"Python has NO char type. A single character 'a' is simply a string (str) of length 1. type('a') returns str — exactly the same as type('hello'). There is only one type for all text.",code:"print(type('a'))      # <class 'str'>\nprint(type('hello'))  # <class 'str'>\nprint(len('a'))       # 1\nprint(len('hello'))   # 5"},
+     {q:"Why can't I change a character in a string?",a:"Strings are immutable — you cannot modify them in place. s[0] = 'X' raises a TypeError. To 'change' a string, create a new one from the old.",code:"s = 'hello'\n# s[0] = 'H'         # TypeError!\ns = 'H' + s[1:]       # new string: 'Hello'\ns = s.replace('h','H') # also creates new string"},
+     {q:"What does split() return and how is join() the opposite?",a:"split() breaks a string into a list. join() combines a list back into a string. They are exact inverses. The separator goes before .join() — this confuses beginners.",code:"sentence = 'one,two,three'\nwords = sentence.split(',')    # ['one','two','three']\nback = ','.join(words)         # 'one,two,three'\n\ntext = '  hello world  '\nwords = text.strip().split()   # ['hello','world']"},
+     {q:"How do I format numbers professionally in f-strings?",a:"Use format specifications after the colon inside {}. :.2f for 2 decimals, :, for thousands, :% for percentage, :>10 for right-align in 10 chars.",code:"price = 1234567.891\nprint(f'{price:,.2f}')    # 1,234,567.89\nprint(f'{0.8567:.1%}')   # 85.7%\nprint(f'{\"hi\":>10}')    # '        hi'\nprint(f'{42:05d}')       # 00042"}
+   ],
+   assignment:{title:"Report Formatter",desc:"Build a student report formatter from raw input.",tasks:["Take: name (may have extra spaces), marks (int), city, year of birth via input()","Clean name: strip() + title(). Compute age from year. Convert marks to float.","Print a 44-char separator line using '-'*44","Print a formatted report card with aligned columns: name left-aligned in 20 chars, marks right-aligned in 5 chars","Show marks as percentage (:.1f%) and letter grade (A+/A/B/C/F)","Print 'RANK: TOP X%' using round() — e.g. 88 marks → 'TOP 20%' if 80th percentile","Bonus: use zfill to show student ID as 6-digit padded number"]}
+  },
+  {id:"m04",num:"04",title:"Booleans & Operators",subtitle:"Booleans, Operators, If...Else, Match",track:"py",
+   topics:["True and False — capital T and F required","Truthy/falsy: 0, 0.0, '', [], {}, (), None, False are falsy","Comparison: ==, !=, >, <, >=, <=","Logical: and, or, not","Chained comparisons: 0 <= x <= 100","Identity: is, is not — for None/True/False only","Membership: in, not in","if / elif / else — only first True branch runs","Ternary: value = x if cond else y","Match statement (Python 3.10+)","Short-circuit evaluation","Order of conditions matters — specific before general"],
+   qna:[
+     {q:"What values are falsy in Python?",a:"Falsy values: 0, 0.0, 0j (complex), '' (empty string), [] (empty list), {} (empty dict or set), () (empty tuple), range(0), None, False. Literally everything else is truthy — even '0' and [0] are truthy.",code:"falsy = [0, 0.0, '', [], {}, (), None, False]\nfor v in falsy:\n    if not v: print(f'{repr(v):15} → falsy')\n\n# Surprise: these are TRUTHY\nif [0]:  print('truthy')   # [0] has one item!\nif '0':  print('truthy')   # non-empty string!"},
+     {q:"Why is 'if marks == 75 or 80' always True?",a:"Python evaluates as (marks == 75) or (80). The integer 80 is truthy, so the second operand is always True, making the whole expression always True regardless of marks.",code:"# WRONG — always True:\nif marks == 75 or 80:\n\n# CORRECT options:\nif marks == 75 or marks == 80:\nif marks in (75, 80):\nif marks in {75, 80}:  # set lookup, faster"},
+     {q:"What is short-circuit evaluation?",a:"Python stops evaluating as soon as the result is known. In 'A and B', if A is False, B is never evaluated. In 'A or B', if A is True, B is never evaluated. Used to prevent errors.",code:"# Safe null check — won't crash if data is None\nif data is not None and data['marks'] > 60:\n    pass\n\n# OR for default:\nname = user_input or 'Anonymous'  # if input is empty"},
+     {q:"How does the match statement work?",a:"Match (Python 3.10+) is a pattern-matching statement. More powerful than switch/case — it can match values, types, structures. Use _ as the wildcard/default case.",code:"match command:\n    case 'quit':\n        exit()\n    case 'help' | '?':\n        show_help()\n    case str(s) if s.startswith('/'):\n        run_command(s)\n    case _:\n        print('Unknown command')"}
+   ],
+   assignment:{title:"Multi-Stage Eligibility System",desc:"Build a comprehensive eligibility checker for a data analytics certification program.",tasks:["Collect via input(): age, marks%, years_experience, has_python_cert (yes/no), city","Validate each separately: age 22-40, marks >= 65, exp >= 1, cert is yes/no only — raise informative messages for invalid input","Print individual PASS/FAIL for each of the 4 criteria with reason","Overall eligibility: ALL criteria must pass","Use match on years_experience to assign tier: 0='Trainee', 1-2='Junior', 3-5='Mid', 6+='Senior'","Bonus: ternary for fee_waiver = 'Yes' if marks >= 90 else 'No'","Bonus: chain comparison: print whether marks are in 'excellent range': 80 <= marks <= 100"]}
+  },
+  {id:"m05",num:"05",title:"Loops",subtitle:"While Loops, For Loops",track:"py",
+   topics:["for loop with range(start, stop, step)","Iterating directly over lists, strings, dicts","enumerate() — index + value together","zip() — parallel iteration over two lists","while loop — runs until condition is False","break — exit loop immediately","continue — skip to next iteration","else on for/while — runs if no break","Nested loops — complexity warning","List comprehension: [expr for x in iter if cond]","range() memory efficiency vs lists","Common patterns: accumulator, counter, sentinel"],
+   qna:[
+     {q:"range(5) gives 0,1,2,3,4 — how to get 1,2,3,4,5?",a:"range(start, stop) — the stop value is EXCLUDED. range(1, 6) gives 1,2,3,4,5. Think of it as: start is included, stop is the boundary but not included.",code:"for i in range(5):    print(i, end=' ')  # 0 1 2 3 4\nfor i in range(1,6):  print(i, end=' ')  # 1 2 3 4 5\nfor i in range(0,10,2): print(i,end=' ')# 0 2 4 6 8\nfor i in range(5,0,-1): print(i,end=' ')# 5 4 3 2 1"},
+     {q:"When should I use for vs while?",a:"Use for when you know what to iterate over (a list, a range, a file). Use while when you repeat until an unknown condition changes (user validation, waiting for convergence). Default to for — while loops risk infinite loops.",code:"# for: known collection\nfor student in students:\n    compute_grade(student)\n\n# while: unknown stopping point\nattempts = 0\nwhile attempts < 3:\n    pw = input('Password: ')\n    if pw == correct: break\n    attempts += 1"},
+     {q:"What is the loop else clause — when does it run?",a:"The else block runs when the loop finishes normally without hitting a break. It does NOT run if a break was used. Perfect for 'search and report not found' patterns.",code:"target = 85\nfor mark in marks:\n    if mark == target:\n        print(f'Found {target}')\n        break\nelse:\n    print(f'{target} not found in list')"},
+     {q:"enumerate() vs range(len()) — which is better?",a:"Always prefer enumerate(). range(len(lst)) is the C-style approach — it works but is un-Pythonic. enumerate() is cleaner, safer (no off-by-one), and gives both index and value directly.",code:"names = ['Priya', 'Rahul', 'Sara']\n\n# Un-Pythonic (avoid):\nfor i in range(len(names)):\n    print(i, names[i])\n\n# Pythonic:\nfor i, name in enumerate(names, start=1):\n    print(f'{i}. {name}')"}
+   ],
+   assignment:{title:"Marks Processor",desc:"Build a complete marks collection and analysis tool using loops only (no pandas, no built-ins like sum/max).",tasks:["Use a while loop with break to collect student names and marks (stop on 'done')","Validate inside the loop: reject marks outside 0-100, print error and ask again","Use a for loop with enumerate to compute: total, average, highest, lowest — using accumulators","Use a for loop to count passes (>=40) and fails separately","Use a nested loop to print a simple bar chart: each mark as a row of # characters scaled to 20 chars max","Use zip() to pair names and marks and print formatted output","Loop else: after searching for a specific mark, print 'not found' if not present"]}
+  },
+  {id:"m06",num:"06",title:"Lists & Comprehensions",subtitle:"Python Lists, Python Arrays",track:"py",
+   topics:["Creating: [], list(), list(range(10))","0-based indexing and negative indexing","Slicing: lst[start:stop:step]","Methods: append, extend, insert, remove, pop, clear, copy, sort, reverse, count, index","Built-ins: len(), sum(), min(), max(), sorted()","in and not in membership test","List comprehension: [expr for x in iter if cond]","Nested comprehension for 2D data","copy() vs assignment (reference)","copy.deepcopy() for nested lists","Sorting with key=: lambda, str.lower, itemgetter","2D lists as simple data tables"],
+   qna:[
+     {q:"append() vs extend() — what exactly is the difference?",a:"append() adds its argument as ONE item — even if the argument is a list, it becomes a nested list. extend() unpacks any iterable and adds each element individually.",code:"a = [1, 2]\na.append([3, 4])   # [1, 2, [3, 4]]  — list nested!\n\na = [1, 2]\na.extend([3, 4])   # [1, 2, 3, 4]   — items added\n\na = [1, 2]\na += [3, 4]        # [1, 2, 3, 4]   — same as extend"},
+     {q:"Does a list comprehension change the original list?",a:"No. A comprehension ALWAYS creates a new list. It never modifies the original. If you don't assign the result to a variable, the new list is immediately discarded.",code:"marks = [78, 45, 92, 37]\n\n# This result is THROWN AWAY:\n[m * 2 for m in marks]\nprint(marks)  # [78, 45, 92, 37] — unchanged!\n\n# Must assign:\ndoubled = [m * 2 for m in marks]  # saved ✓"},
+     {q:"b = a vs b = a.copy() — what's the difference?",a:"b = a creates a reference — both names point to the same list object. Change b and a changes too. b = a.copy() creates an independent copy. For nested lists, use copy.deepcopy().",code:"a = [1, 2, 3]\nb = a           # b is an alias for a\nb.append(4)\nprint(a)        # [1, 2, 3, 4]  — a changed!\n\nc = a.copy()\nc.append(5)\nprint(a)        # [1, 2, 3, 4]  — a unchanged ✓"},
+     {q:"sort() vs sorted() — which should I use?",a:"sort() modifies the list IN PLACE and returns None. sorted() returns a NEW sorted list leaving the original unchanged. For data analysis: always use sorted() to preserve original order.",code:"marks = [88, 45, 92, 67]\n\nranked = sorted(marks, reverse=True)  # new list\nprint(marks)   # [88, 45, 92, 67] — unchanged!\nprint(ranked)  # [92, 88, 67, 45]\n\nmarks.sort()   # marks itself is now sorted\nprint(marks)   # [45, 67, 88, 92]"}
+   ],
+   assignment:{title:"Student Grade Manager",desc:"Build a complete student management system using lists and comprehensions.",tasks:["Create lists: names (8 students) and marks (8 values, hardcoded)","List comprehension: grades = ['A' if m>=90 else 'B' if m>=75 else 'C' if m>=60 else 'F' for m in marks]","List comp: passing_marks (>=40), failing_names (students who failed)","List comp: marks_normalised = [(m - min(marks))/(max(marks)-min(marks)) for m in marks]","Sort a COPY and find top 3: ranked = sorted(zip(names,marks), key=lambda x:x[1], reverse=True)","2D list: simulate a 4x4 gradebook using nested list comp, compute row averages (per student)","Demonstrate remove() with try/except — handle the case where a student is not in the list"]}
+  },
+  {id:"m07",num:"07",title:"Tuples, Sets & Dictionaries",subtitle:"Python Tuples, Sets, Dictionaries",track:"py",
+   topics:["Tuples: immutable, () syntax, single-item (x,)","Tuple packing and unpacking","Returning multiple values from a function","Tuples as dictionary keys","Named tuples from collections module","Sets: unique, unordered, {} or set()","Set operations: | & - ^ (union, intersect, diff, sym diff)","frozenset — immutable set","Dictionaries: key-value, {} or dict()","CRUD: create, read, update, delete","Methods: get, keys, values, items, update, pop, setdefault","Dict comprehension","Nested dicts and list of dicts pattern"],
+   qna:[
+     {q:"Why is (42) an int but (42,) a tuple?",a:"(42) is just parentheses around a number — it equals 42. The comma is what makes a tuple, not the parentheses. Always add a trailing comma for single-item tuples.",code:"print(type((42)))    # <class 'int'>\nprint(type((42,)))   # <class 'tuple'>\nprint(type(42,))     # SyntaxError — needs parens\nt = 42,              # valid — trailing comma alone\nprint(type(t))       # <class 'tuple'>"},
+     {q:"Why can't I do my_set[0]?",a:"Sets are unordered — elements have no position or index. There is no 'first item'. To access by position, convert to a sorted list. Note: the order may differ from insertion order.",code:"s = {3, 1, 4, 1, 5, 9}\nprint(s)       # {1, 3, 4, 5, 9} — order may vary\n# s[0]         # TypeError: 'set' is not subscriptable\nprint(sorted(s)[0])  # 1 — smallest item"},
+     {q:"dict['key'] vs dict.get('key') — which to use?",a:"dict['key'] raises a KeyError if the key doesn't exist — can crash your program. dict.get('key') returns None silently. dict.get('key', default) returns your default. In data work always use .get() when the key might be missing.",code:"d = {'name': 'Priya', 'marks': 88}\n\nprint(d['phone'])           # KeyError!\nprint(d.get('phone'))       # None — safe\nprint(d.get('phone', 'N/A'))# 'N/A' — with default"},
+     {q:"What is the 'list of dicts' pattern?",a:"A list of dicts is a table: each dict is one row, each key is a column. This is how JSON data arrives, how APIs respond, and how pandas represents rows internally. Understanding this makes pandas trivial.",code:"students = [\n    {'name': 'Priya',  'marks': 88, 'city': 'Mumbai'},\n    {'name': 'Rahul',  'marks': 72, 'city': 'Delhi'},\n]\n# Filter: Mumbai students above 80\nresult = [s for s in students\n          if s['city']=='Mumbai' and s['marks']>80]"}
+   ],
+   assignment:{title:"Inventory System",desc:"Use all three structures — tuples, sets, dicts — in an inventory management system.",tasks:["6 products as list of dicts: id, name, price, stock, category, location (tuple: warehouse_row, shelf)","Use tuples as dict keys: warehouse_map = {(1,'A'): 'Laptops', (1,'B'): 'Phones', ...}","Set operations: unique_categories, in_stock_products, out_of_stock — find products added/removed since last week using set difference","Dict comprehension: price_lookup = {p['name']: p['price'] for p in products}","GroupBy category manually: use a dict to aggregate total stock value per category","Find: set of cities where products are sold — then find cities covered this month but not last month"]}
+  },
+  {id:"m08",num:"08",title:"Functions & Scope",subtitle:"Functions, Lambda, Scope",track:"py",
+   topics:["def syntax, parameters, arguments","Required vs optional (default) parameters","*args — variable positional args → tuple","**kwargs — variable keyword args → dict","return statement — can return multiple values","Difference between print() and return","Lambda: anonymous one-line function","map() — apply to every element","filter() — keep elements that pass test","sorted() with key parameter","LEGB scope: Local → Enclosing → Global → Built-in","global and nonlocal keywords","Functions as first-class objects — pass as arguments"],
+   qna:[
+     {q:"What is the critical difference between print() and return?",a:"print() sends text to the screen and returns None. return sends a value back to the caller. If you don't return, the caller gets None — silently. Always return values you intend to use.",code:"def wrong(x):  print(x * 2)     # shows on screen, returns None\ndef right(x):  return x * 2     # gives value to caller\n\ny = wrong(5)   # y is None — the '10' went to screen!\ny = right(5)   # y is 10 — can use it"},
+     {q:"What is *args and how is it different from a list parameter?",a:"*args collects all extra positional arguments into a tuple automatically. A list parameter requires the caller to manually create a list. *args is more flexible — callers can pass any number of values.",code:"def total_v1(prices_list):\n    return sum(prices_list)  # caller must do: total([100,200])\n\ndef total_v2(*prices):\n    return sum(prices)  # caller can do: total(100, 200, 300)"},
+     {q:"What is the LEGB rule?",a:"Python looks up variable names in this order: Local (inside current function) → Enclosing (outer function if nested) → Global (module level) → Built-in (Python builtins). Stops at the first match.",code:"x = 'global'\ndef outer():\n    x = 'enclosing'\n    def inner():\n        x = 'local'\n        print(x)  # 'local' — L found first\n    inner()\n    print(x)  # 'enclosing' — L gone, E found\nouter()\nprint(x)  # 'global'"},
+     {q:"When to use lambda vs def?",a:"Lambda: short one-expression functions used once, especially as key= arguments to sorted/map/filter. def: for anything reusable, multi-line, or complex. Lambda cannot have statements (if/else is OK as ternary, not as block).",code:"# Lambda as key:\nstudents.sort(key=lambda s: (-s['marks'], s['name']))\n\n# def for reusable logic:\ndef get_grade(m):\n    if m >= 90: return 'A+'\n    elif m >= 75: return 'A'\n    return 'B' if m >= 60 else 'F'"}
+   ],
+   assignment:{title:"Analytics Function Library",desc:"Build a reusable analytics toolkit as pure functions.",tasks:["def compute_stats(*values) → returns dict: mean, median, std, min, max, count","def clean_names(names, **options) → supports strip=True, title=True, remove_extra_spaces=True","def classify_students(students, passing=40, grade_scale=None) → adds 'grade' and 'result' to each dict","Use map() + lambda to apply 18% GST to a price list","Use filter() + lambda to keep only records above a threshold passed as parameter","Use sorted() + lambda key to rank by marks descending, then by name ascending on ties","Write a function that accepts another function as parameter: apply_to_all(data, func)"]}
+  },
+  {id:"m09",num:"09",title:"OOP — Classes & Inheritance",subtitle:"Classes/Objects, Inheritance, Polymorphism, Iterators",track:"py",
+   topics:["class keyword and __init__ constructor","self — the instance reference","Instance attributes vs class attributes","Instance methods, @classmethod, @staticmethod","__str__ and __repr__ dunder methods","__len__, __eq__, __lt__, __add__ operator overloading","Inheritance: class Child(Parent)","super() to extend parent methods","isinstance() and issubclass()","Method overriding","Polymorphism — same interface, different behaviour","__iter__ and __next__ for custom iterators","yield and generator functions","@property for computed attributes"],
+   qna:[
+     {q:"What is self and why is it explicit in Python?",a:"self refers to the current instance — like 'this' in Java/JS. Python makes it explicit as the first parameter of every instance method. This makes the code clear: you always know you're accessing an instance attribute.",code:"class Student:\n    def __init__(self, name, marks):\n        self.name = name      # instance attribute\n        self.marks = marks    # unique to this instance\n    def grade(self):\n        return 'A' if self.marks >= 90 else 'B'"},
+     {q:"Class attribute vs instance attribute?",a:"Class attributes are defined in the class body — shared by ALL instances. Instance attributes are defined in __init__ — unique to each object. Changing a class attribute changes it for all instances.",code:"class Student:\n    school = 'MIT'       # class attribute — shared\n    count = 0\n    def __init__(self, name):\n        self.name = name  # instance — unique\n        Student.count += 1  # update class attr"},
+     {q:"What does super() do exactly?",a:"super() returns a proxy object that delegates method calls to the parent class. In __init__, it lets you run the parent's setup code before adding child-specific attributes.",code:"class Animal:\n    def __init__(self, name, sound):\n        self.name = name\n        self.sound = sound\n        \nclass Dog(Animal):\n    def __init__(self, name, breed):\n        super().__init__(name, 'Woof')  # parent setup\n        self.breed = breed  # child addition"},
+     {q:"What is a generator and why is it better than a list for large data?",a:"A generator uses yield to produce values one at a time — never holding all values in memory at once. For large datasets (millions of rows), a generator uses O(1) memory vs O(n) for a list.",code:"# List: all in memory at once\ndef squares_list(n):\n    return [x**2 for x in range(n)]  # O(n) memory\n\n# Generator: one at a time\ndef squares_gen(n):\n    for x in range(n):\n        yield x**2  # O(1) memory!\n\nfor sq in squares_gen(1_000_000):  # safe for large n\n    print(sq)"}
+   ],
+   assignment:{title:"OOP Data System",desc:"Model a data analysis system using full OOP.",tasks:["class Dataset: __init__(name, rows=[]), add_row(dict), remove_row(idx), __len__, __str__, __iter__","class NumericDataset(Dataset): inherits, adds mean(), std(), percentile(p), normalise() methods","@property 'shape' on Dataset returning (len, num_columns) tuple","@classmethod NumericDataset.from_csv(path) — reads file and creates instance","Polymorphism: create TextDataset and NumericDataset both with summarize() behaving differently","Generator method rows_where(column, condition_func) yielding matching rows","Operator overloading: dataset1 + dataset2 merges rows (override __add__)"]}
+  },
+  {id:"m10",num:"10",title:"Modules, Files & Error Handling",subtitle:"Modules, Dates, Math, JSON, Try/Except, PIP, VirtualEnv",track:"py",
+   topics:["import, from x import y, import x as alias","__name__ == '__main__' guard","Standard library: os, sys, pathlib, math, random","datetime: now(), strftime(), strptime(), timedelta","math: sqrt, log, ceil, floor, pi, factorial, comb","json: loads, dumps, load, dump — the s means string","File I/O: open(), r/w/a modes, with statement","try / except / else / finally blocks","raise and custom exception classes","Multiple except handlers with specific types","PIP: install, uninstall, freeze, requirements.txt","Virtual environments: python -m venv env, activate","pathlib.Path — modern file path handling"],
+   qna:[
+     {q:"What does __name__ == '__main__' do?",a:"When Python runs a file directly, __name__ is set to '__main__'. When a file is imported as a module, __name__ is set to the filename. This guard lets you have code that runs only when the file is executed directly, not when imported.",code:"# utils.py\ndef compute(x):\n    return x * 2\n\nif __name__ == '__main__':\n    # Only runs when executing utils.py directly\n    # Not when doing: import utils\n    print(compute(5))"},
+     {q:"json.dump vs json.dumps — what does the 's' mean?",a:"The 's' stands for 'string'. dumps = dump to a String (returns a str). dump = dump to a File (writes to file object). Same pattern: loads = load from string, load = load from file.",code:"import json\ndata = {'marks': 88, 'name': 'Priya'}\n\ntext = json.dumps(data, indent=2)  # returns str\nprint(type(text))  # <class 'str'>\n\nwith open('out.json','w') as f:\n    json.dump(data, f, indent=2)   # writes to file"},
+     {q:"What is the finally block for?",a:"finally always runs whether the try succeeded, whether an exception was caught, or even if the except block raises another error. Used for cleanup that must happen: closing files, releasing database connections.",code:"conn = None\ntry:\n    conn = open_database()\n    data = conn.query(sql)\nexcept DatabaseError as e:\n    log_error(e)\nfinally:\n    if conn is not None:\n        conn.close()  # ALWAYS runs — prevents leaks"},
+     {q:"Why is a virtual environment important?",a:"Without venv, all projects share system Python packages. If Project A needs pandas 1.3 and Project B needs pandas 2.0, one will break. A venv gives each project its own isolated, independent package space.",code:"# Create a new venv:\npython -m venv myenv\n\n# Activate (Mac/Linux):\nsource myenv/bin/activate\n\n# Activate (Windows):\nmyenv\\Scripts\\activate\n\n# Save dependencies:\npip freeze > requirements.txt\n\n# Install from requirements:\npip install -r requirements.txt"}
+   ],
+   assignment:{title:"Data Pipeline with Full Error Handling",desc:"Build a robust file-based data processing pipeline.",tasks:["Create a venv, activate it, demonstrate pip install/freeze workflow","Function load_json(path) → raises FileNotFoundError with clear message if missing, JSONDecodeError if corrupt","Function parse_dates(records) → uses strptime to parse date strings, returns records with age_days column using timedelta","Function save_report(data, dir) → saves JSON with datetime-stamped filename using pathlib","Custom exception: DataValidationError(Exception) — raised when required fields missing","Pipeline: load → validate → parse → save — each step in try/except with specific handlers","Log: print timestamp (datetime.now().strftime) with each step"]}
+  },
+  {id:"m11",num:"11",title:"RegEx & Advanced Python",subtitle:"Python RegEx, String Formatting deep dive",track:"py",
+   topics:["What is regex — pattern matching for strings","re.match() — checks start of string","re.search() — scans whole string","re.findall() — returns list of all matches","re.finditer() — returns iterator of match objects","re.sub() — replace all matches","re.compile() — precompile for performance","Special sequences: \\d, \\w, \\s, \\b","Quantifiers: *, +, ?, {n}, {n,m}","Anchors: ^ start, $ end","Character classes: [a-z], [0-9], [^abc]","Groups: () capturing, (?:) non-capturing","Flags: re.I (case-insensitive), re.M (multiline)","Real uses: extract emails, phones, dates, clean text"],
+   qna:[
+     {q:"re.match() vs re.search() — which to use?",a:"match() only checks from the VERY START of the string. search() scans the whole string for the first match anywhere. For data cleaning, almost always use search(). Use match() only when you need the pattern to start at position 0.",code:"import re\ntext = 'price: ₹1234'\n\nre.match(r'\\d+', text)    # None — digits not at start!\nre.search(r'\\d+', text)   # Match: '1234' — found"},
+     {q:"What does r'' (raw string) mean in regex?",a:"Raw strings treat backslashes as literal backslashes. Without r'', \\d would be interpreted as an escape sequence. With r'', Python leaves the backslash as-is for the regex engine. Always use r'' for patterns.",code:"# Without raw string:\nre.search('\\\\d+', text)   # works but ugly: need 4 \\\\\n\n# With raw string:\nre.search(r'\\d+', text)   # clean: 1 backslash for regex"},
+     {q:"How do I extract all occurrences of a pattern?",a:"Use re.findall() to get a list of all matches. Use re.finditer() to get match objects with position info (useful for replacements with context).",code:"text = 'Emails: priya@gmail.com, rahul@yahoo.in'\nemails = re.findall(r'[\\w.]+@[\\w.]+\\.[a-z]{2,}', text)\nprint(emails)  # ['priya@gmail.com', 'rahul@yahoo.in']"},
+     {q:"How do I use re.sub() for data cleaning?",a:"re.sub(pattern, replacement, string) replaces all matches. The replacement can be a string or a function. Use it to remove unwanted characters, normalise formats, redact sensitive data.",code:"import re\n\n# Remove non-alphanumeric:\nclean = re.sub(r'[^\\w\\s]', '', dirty_text)\n\n# Normalise whitespace:\nclean = re.sub(r'\\s+', ' ', clean).strip()\n\n# Redact emails:\nsafe = re.sub(r'[\\w.]+@[\\w.]+', '[EMAIL]', text)"}
+   ],
+   assignment:{title:"Data Cleaning with RegEx",desc:"Clean a messy text dataset using regex patterns.",tasks:["Extract all email addresses from a long string using re.findall(r'...', text)","Validate Indian mobile numbers: 10 digits, optional +91 or 0 prefix, must be callable","Extract prices from strings like '₹1,234.50', '₹45,000', '$99.99' using groups","Extract dates in multiple formats: DD/MM/YYYY, YYYY-MM-DD, DD-Mon-YYYY — normalise all to YYYY-MM-DD","Clean product names: remove special chars [^a-zA-Z0-9 ], normalise spaces, title case","Redact PII: replace all emails + phones in a text file with [REDACTED] using re.sub()"]}
+  },
+  {id:"m12",num:"12",title:"NumPy Foundations",subtitle:"NumPy Intro, Arrays, Indexing, Slicing, Data Types, Copy vs View",track:"np",
+   topics:["Why NumPy: contiguous memory, C speed, vectorisation","np.array() from list — dtype inference","1D, 2D, 3D arrays","Array creation: zeros, ones, eye, arange, linspace, full","dtype: int32, int64, float32, float64, bool","astype() for conversion — copy created","Indexing: arr[0], arr[-1], arr[1,2] for 2D","Slicing: arr[1:4], arr[:, 0], arr[::2]","Boolean masking: arr[arr > 5]","np.where(cond, x, y) — element-wise ternary","Copy vs View — THE most important NumPy concept","arr.copy() for independent copy"],
+   qna:[
+     {q:"Why is NumPy dramatically faster than Python lists for math?",a:"Python lists store Python objects — each with type info, reference count, and value. Lists are arrays of pointers. NumPy arrays store raw values in contiguous C memory, all of the same type. Operations are C loops with no Python overhead per element.",code:"import numpy as np, time\n\ndata = list(range(1_000_000))\nt0 = time.time()\nresult = [x*1.18 for x in data]  # Python loop\nprint(f'List: {time.time()-t0:.3f}s')  # ~0.1s\n\narr = np.array(data, dtype=float)\nt0 = time.time()\nresult = arr * 1.18   # vectorised\nprint(f'NumPy: {time.time()-t0:.4f}s')  # ~0.001s"},
+     {q:"What is the Copy vs View problem — show me the bug?",a:"A slice of a NumPy array returns a VIEW — it shares the same underlying data. Modifying the view modifies the original. Use .copy() to get an independent copy.",code:"arr = np.array([1, 2, 3, 4, 5])\n\nview = arr[1:3]    # VIEW — shares memory!\nview[0] = 99\nprint(arr)  # [1, 99, 3, 4, 5] — CHANGED!\n\narr = np.array([1, 2, 3, 4, 5])  # reset\ncopy = arr[1:3].copy()  # independent copy\ncopy[0] = 99\nprint(arr)  # [1, 2, 3, 4, 5] — unchanged ✓"},
+     {q:"How does boolean masking work?",a:"arr > 5 creates a boolean array of True/False. Using it as an index returns only elements where True. This is the primary way to filter data in NumPy — no loops needed.",code:"marks = np.array([78, 45, 92, 37, 88, 61])\n\nmask = marks >= 60       # [True, False, True, False, True, True]\npassing = marks[mask]   # array([78, 92, 88, 61])\n\n# Compound conditions:\npremium = marks[(marks >= 75) & (marks <= 95)]"},
+     {q:"What does axis=0 vs axis=1 mean — I keep getting this wrong?",a:"axis=0 operates DOWN the rows → gives a column-wise result. axis=1 operates ACROSS the columns → gives a row-wise result. Mnemonic: axis=0 collapses the row dimension, axis=1 collapses the column dimension.",code:"arr = np.array([[1, 2, 3],\n                [4, 5, 6]])\n\narr.sum(axis=0)  # [5, 7, 9]  — column sums (rows collapsed)\narr.sum(axis=1)  # [6, 15]    — row sums (cols collapsed)\narr.max(axis=0)  # [4, 5, 6]  — max per column\narr.mean(axis=1) # [2.0, 5.0] — mean per row"}
+   ],
+   assignment:{title:"NumPy Array Explorer",desc:"Master all array creation and manipulation methods.",tasks:["Create 7 arrays using: array(), zeros(), ones(), eye(4), arange(0,50,5), linspace(0,1,11), random.randint(1,101,(5,6)) — seed=42","2D array (5,6): extract row 2, column 3, submatrix [1:4, 2:5]","Demonstrate the copy vs view bug: show arr changing via view, then fix with .copy()","Boolean filter on 100 random scores (0-100): passing (>=60), top 10% (>=np.percentile(marks,90)), below mean","dtype conversion: float64 array → int32, print .nbytes before/after to show memory savings","3x4 matrix: compute row means (axis=1), column max (axis=0), overall std without axis"]}
+  },
+  {id:"m13",num:"13",title:"NumPy Operations & Shape",subtitle:"Shape, Reshape, Iterating, Join, Split, Search, Sort, Filter",track:"np",
+   topics:["arr.shape, ndim, size, itemsize, nbytes","reshape() — must conserve total elements","reshape(-1, n) — infer one dimension","flatten() creates copy, ravel() creates view","np.concatenate(axis=0 or 1)","np.vstack(), hstack(), dstack()","np.array_split() for unequal splits","np.sort() along axis, argsort() for indices","np.searchsorted() for binary search","np.unique(return_counts=True)","np.argmax(), argmin(), nonzero()","nditer() for multi-dimensional loops","np.apply_along_axis() for custom functions"],
+   qna:[
+     {q:"reshape(-1, 3) — what does -1 mean?",a:"-1 tells NumPy: 'figure out this dimension yourself'. Given the total number of elements and the other dimensions you specified, NumPy computes what -1 must be. Only one dimension can be -1.",code:"arr = np.arange(24)\narr.reshape(-1, 3)   # shape (8,3)  — NumPy found 8\narr.reshape(4, -1)   # shape (4,6)  — NumPy found 6\narr.reshape(2,-1,3)  # shape (2,4,3)— NumPy found 4"},
+     {q:"flatten() vs ravel() — which is safer?",a:"flatten() always returns a copy — safe to modify without affecting the original. ravel() returns a view when possible (faster, less memory) but changing it may change the original. Use flatten() when in doubt.",code:"matrix = np.array([[1,2],[3,4]])\nf = matrix.flatten()   # copy — always safe\nf[0] = 99\nprint(matrix[0,0])     # 1 — unchanged ✓\n\nr = matrix.ravel()     # view!\nr[0] = 99\nprint(matrix[0,0])     # 99 — changed!"},
+     {q:"What does argsort() return and how do I use it?",a:"argsort() returns the INDICES that would sort the array — not the values themselves. The index at position 0 in the result is the index of the smallest element.",code:"marks = np.array([78, 95, 61, 88, 72])\norder = np.argsort(marks)   # [2, 4, 0, 3, 1]\n# Index 2 (value 61) is smallest\n\n# Get sorted values:\nmarks[order]  # [61, 72, 78, 88, 95]\n\n# Rank from highest:\nmarks[order[::-1]]  # [95, 88, 78, 72, 61]"},
+     {q:"hstack vs vstack — which stacks columns and which stacks rows?",a:"vstack = vertical stack = adds new ROWS (stack top-to-bottom like stacking papers). hstack = horizontal stack = adds new COLUMNS (stack left-to-right like opening books side by side).",code:"a = np.array([[1,2],[3,4]])   # shape (2,2)\nb = np.array([[5,6],[7,8]])   # shape (2,2)\n\nnp.vstack([a,b])  # shape (4,2) — rows stacked\nnp.hstack([a,b])  # shape (2,4) — cols stacked"}
+   ],
+   assignment:{title:"NumPy Transformation Pipeline",desc:"Build a data transformation pipeline using only NumPy.",tasks:["Create a 6x8 matrix of random integers (seed=42). Explore: shape, ndim, size, nbytes","Reshape to (8,6), (12,4), (48,) — verify shape * each other matches total elements","Split the matrix into 3 equal parts along axis=0 using array_split, print each part's shape","Stack two random 3x5 matrices: vertically, horizontally — verify resulting shapes","Sort each ROW independently, then sort each COLUMN independently (axis parameter)","Find: global argmax, top-5 indices using argsort, count of values above 70 using nonzero()"]}
+  },
+  {id:"m14",num:"14",title:"NumPy Random & Distributions",subtitle:"NumPy Random, All 11 Distributions",track:"np",
+   topics:["np.random.seed() — reproducibility essential","np.random.randint(), rand(), randn()","np.random.choice() — sampling with/without replacement","np.random.shuffle() in-place, permutation() new array","Normal distribution: loc (mean), scale (std)","Binomial: n (trials), p (probability)","Poisson: lam (average rate)","Uniform: low, high","Exponential: scale (1/rate)","Logistic, Multinomial, Chi-square","Rayleigh, Pareto, Zipf distributions","Visualising distributions with seaborn","Central Limit Theorem demonstration"],
+   qna:[
+     {q:"Why must I always set np.random.seed()?",a:"Without a seed, every run produces different random numbers — your analysis is not reproducible. Anyone who runs your code gets different results. One fixed seed at the top of every script/notebook solves this. Any integer works.",code:"import numpy as np\nnp.random.seed(42)  # ← top of EVERY script!\n\nmarks = np.random.normal(loc=65, scale=15, size=200)\n# Same results every time you run this"},
+     {q:"Normal vs Poisson — which distribution for which data?",a:"Normal (Gaussian): continuous measurements that cluster around a mean — exam marks, heights, temperatures, errors. Poisson: count of discrete events in a fixed interval — daily sales, website requests per minute, typos per page.",code:"# Exam marks (0-100, clusters around 65)\nmarks = np.random.normal(loc=65, scale=15, size=500)\nmarks = np.clip(marks, 0, 100)  # bound to valid range\n\n# Daily website visits (discrete counts)\nvisits = np.random.poisson(lam=5000, size=90)"},
+     {q:"rand() vs randn() — what is the difference?",a:"rand(n) produces n values from uniform distribution between 0 and 1 (equally likely anywhere). randn(n) produces n values from standard normal distribution (mean=0, std=1 — bell curve centred at 0).",code:"np.random.rand(5)     # [0.37, 0.95, 0.73, ...]  uniform 0-1\nnp.random.randn(5)    # [-0.3, 1.2, 0.05, ...]  standard normal\n\n# Custom normal distribution:\nmu, sigma = 65, 15\ncustom = mu + sigma * np.random.randn(500)  # same as normal(65,15,500)"},
+     {q:"What is np.random.choice() useful for in data analysis?",a:"Sampling: select N random items from an array. Essential for creating train/test splits, bootstrapping, cross-validation, simulating random draws.",code:"students = np.array(['Alice','Bob','Charlie','Diana','Eve'])\n\n# Select 3 without replacement (like drawing names):\nselected = np.random.choice(students, size=3, replace=False)\n\n# Bootstrap (with replacement):\ndata = np.random.normal(65, 15, 100)\nbootstrap = np.random.choice(data, size=len(data), replace=True)"}
+   ],
+   assignment:{title:"Statistical Simulation Lab",desc:"Simulate realistic datasets and demonstrate statistical concepts.",tasks:["Simulate 500 student marks: normal(65,15), clip to 0-100, seed=42. Compute mean, std, all quartiles.","Simulate 90 days of sales: Poisson(lambda=150). Find: mean, variance, days above/below mean.","Bootstrap CI: resample marks 1000 times, compute sample mean each time, show 95% CI (2.5th and 97.5th percentiles)","Central Limit Theorem: from Poisson(lam=2), take 1000 samples of n=30, compute sample means, show they're approximately normal","Binomial simulation: 1000 students each with 75% pass probability — simulate outcomes, compare to theoretical mean","Seaborn: histplot with kde=True for the marks simulation, boxplot for the Poisson simulation"]}
+  },
+  {id:"m15",num:"15",title:"NumPy ufuncs",subtitle:"Universal Functions — Arithmetic, Math, Set Operations",track:"np",
+   topics:["What is a ufunc — element-wise C-speed operations","np.add, subtract, multiply, divide, power, mod","np.round_, floor, ceil, trunc — rounding family","np.log, log2, log10, exp, expm1, exp2","np.sqrt, cbrt, abs, sign","np.sin, cos, tan — degrees: np.deg2rad first","np.sinh, cosh, tanh hyperbolic","np.cumsum, cumprod — running totals","np.diff — differences between consecutive elements","np.lcm, gcd — element-wise (NumPy 1.15+)","np.union1d, intersect1d, setdiff1d, in1d","np.frompyfunc() and np.vectorize()"],
+   qna:[
+     {q:"What makes something a ufunc vs a regular function?",a:"A ufunc (universal function) operates element-wise on arrays using compiled C/Fortran code. They support broadcasting, type casting, and are much faster than Python loops or vectorize().",code:"arr = np.array([4, 9, 16, 25, 36])\nnp.sqrt(arr)   # array([2., 3., 4., 5., 6.])\n# Equivalent loop — ~100x slower:\n[math.sqrt(x) for x in arr]"},
+     {q:"What is np.cumsum() and when is it useful?",a:"Cumulative sum: each element is the sum of all elements up to and including that position. Used for running totals, cumulative revenue, tracking progress toward a goal.",code:"daily = np.array([100, 150, 120, 200, 180])\nrunning = np.cumsum(daily)\n# array([100, 250, 370, 570, 750])\nprint(f'Total: {running[-1]}')  # 750\nprint(f'Halfway: {running[len(running)//2]}')"},
+     {q:"What does np.diff() compute?",a:"The difference between consecutive elements: result[i] = arr[i+1] - arr[i]. The output has one fewer element than input. Used for detecting changes, trends, growth rates.",code:"prices = np.array([100, 110, 105, 120, 115])\nchanges = np.diff(prices)\n# array([10, -5, 15, -5])\n\n# Percentage growth rate:\ngrowth_pct = np.diff(prices) / prices[:-1] * 100\n# array([10.0, -4.55, 14.29, -4.17])"},
+     {q:"How do I vectorise my own Python function?",a:"np.vectorize() wraps any Python function so it can accept array inputs. Slower than true C ufuncs but convenient for custom logic. np.frompyfunc() is similar but returns object arrays.",code:"def my_grade(mark):\n    if mark >= 90: return 'A'\n    elif mark >= 75: return 'B'\n    return 'C'\n\nvec_grade = np.vectorize(my_grade)\nmarks = np.array([88, 92, 65, 78, 95])\nprint(vec_grade(marks))  # ['B' 'A' 'C' 'B' 'A']"}
+   ],
+   assignment:{title:"ufunc Analytics Suite",desc:"Use ufuncs to build a complete numerical analysis pipeline without loops.",tasks:["Monthly revenue array (12 values, simulated): log-transform, cumsum (running revenue), diff + % change","Normalise to 0-1 using ONLY ufuncs: (arr - arr.min()) / (arr.max() - arr.min())","Set operations on two product ID arrays: common products, unique to A, unique to B, all unique combined","Custom vectorised function: discount that applies 10%/<100, 15%/100-500, 20%/>500 — use np.vectorize","Trigonometry: sin and cos for 0 to 360 degrees, find all angles where sin > cos","LCM/GCD: find LCM of all adjacent pairs in an array using np.lcm.reduce()"]}
+  },
+  {id:"m16",num:"16",title:"Matplotlib Basics",subtitle:"Intro, Pyplot, Plotting, Markers, Lines, Labels, Grid",track:"mp",
+   topics:["Figure and Axes anatomy","import matplotlib.pyplot as plt","plt.plot() — basic line chart","Markers: marker=, markersize, markerfacecolor, markeredgecolor","Line styles: linestyle (-, --, :, -.), linewidth","Colors: named ('steelblue'), hex ('#e85d3a'), RGB tuple","plt.xlabel(), ylabel(), title() — always add these","plt.legend() — label= on each plot call","plt.grid(alpha=0.3, linestyle='--')","plt.xlim(), ylim() for range control","plt.xticks(), yticks() — customise labels","savefig() BEFORE show() — critical order","plt.figure(figsize=(12,5)) for size"],
+   qna:[
+     {q:"Figure vs Axes — what is the difference?",a:"Figure is the entire canvas/window. Axes is one plot panel inside the Figure. A Figure can contain multiple Axes (subplots). For anything beyond a single chart, use fig, ax = plt.subplots() and work with the ax object.",code:"fig, ax = plt.subplots(figsize=(10, 5))\nax.plot(months, revenue, label='Revenue')\nax.set_title('Monthly Revenue')\nax.set_xlabel('Month')\nax.set_ylabel('Revenue (₹)')\nax.legend()\nfig.savefig('chart.png', dpi=150)\nplt.show()"},
+     {q:"Why MUST savefig() come before show()?",a:"plt.show() renders the figure to the screen AND then clears the figure buffer. If you call savefig() afterwards, you save a blank white image. Always call savefig() first, then show().",code:"plt.plot(months, revenue, marker='o')\nplt.title('Sales Trend')\nplt.grid(alpha=0.3)\nplt.tight_layout()\n# ✓ SAVE FIRST:\nplt.savefig('trend.png', dpi=150, bbox_inches='tight')\n# ✓ SHOW AFTER:\nplt.show()"},
+     {q:"How do I add multiple lines to one chart?",a:"Call plt.plot() or ax.plot() multiple times before show(). Each call adds another line. Use label= on each call and plt.legend() to show the key.",code:"plt.plot(months, revenue, label='Revenue',\n         color='steelblue', linewidth=2)\nplt.plot(months, costs, label='Costs',\n         color='coral', linestyle='--', linewidth=2)\nplt.plot(months, profit, label='Profit',\n         color='seagreen', marker='o')\nplt.legend()\nplt.show()"},
+     {q:"How do I show category names on the x-axis instead of numbers?",a:"Pass the tick positions and labels to plt.xticks(). For many labels, add rotation to prevent overlap.",code:"months = ['Jan','Feb','Mar','Apr','May','Jun']\nrevenue = [120, 145, 132, 160, 178, 195]\nplt.plot(range(6), revenue)\nplt.xticks(range(6), months, rotation=45, ha='right')\nplt.tight_layout()  # prevent label cutoff"}
+   ],
+   assignment:{title:"Revenue Trend Charts",desc:"Build clear, well-labelled line charts for a sales dataset.",tasks:["Simulate 12 months of revenue and costs data using NumPy (seed=42)","Line chart with both revenue and costs: proper colors, dashed vs solid, different markers","Add horizontal reference line at annual average using plt.axhline(y=avg, linestyle=':', color='gray')","Mark the peak month with a star marker (marker='*', size=15, color='gold') using plt.plot([peak_idx],[peak_val])","Custom x-axis: show month names at 45 degrees","Grid: subtle grid with alpha=0.3 and dashed lines","Save PNG at 150 dpi, verify file exists and size > 0 bytes"]}
+  },
+  {id:"m17",num:"17",title:"Matplotlib Chart Types",subtitle:"Scatter, Bars, Histograms, Pie Charts, Subplots",track:"mp",
+   topics:["plt.scatter(): x, y, c=color, s=size, alpha, cmap, edgecolors","plt.colorbar() for continuous color scale","plt.bar() and plt.barh() — basic bars","Stacked bars with bottom= parameter","Error bars with yerr= parameter","plt.hist(): bins, edgecolor, density, cumulative","plt.axvline() for reference lines on histogram","plt.pie(): labels, autopct, explode, startangle","When to use each chart type — decision rules","plt.subplots(rows, cols) — 2D array of axes","fig.suptitle() — overall figure title","plt.tight_layout() — prevent overlap","plt.style.use() — seaborn-v0_8, ggplot, dark_background"],
+   qna:[
+     {q:"Line chart vs Scatter — how do I choose?",a:"Line chart: data points have a meaningful order (time series, progression). The line implies continuity between points. Scatter: two independent variables where you want to see the relationship or correlation. Never connect random scatter points with a line.",code:"# Time series → LINE (order matters)\nplt.plot(dates, prices)\n\n# Correlation → SCATTER (order doesn't matter)\nplt.scatter(study_hours, exam_marks, alpha=0.6)\n\n# Both: scatter + trend line\nplt.scatter(x, y, alpha=0.4)\nplt.plot(x, np.poly1d(np.polyfit(x,y,1))(x))"},
+     {q:"How many histogram bins is the right number?",a:"Start with bins='auto' and let matplotlib decide. For manual: sqrt(n) for n data points is a common rule. Too few = hides the shape. Too many = noisy. Experiment with 10, 20, 30 and pick the clearest.",code:"marks = np.random.normal(65, 15, 200)\n\nplt.hist(marks, bins='auto', edgecolor='white')  # auto\nplt.hist(marks, bins=15, edgecolor='white')      # manual\nplt.hist(marks, bins=15, density=True)           # probability density\nplt.axvline(marks.mean(), color='red', linestyle='--', label='Mean')"},
+     {q:"When should I avoid pie charts?",a:"Avoid pie when: more than 4-5 segments (humans can't accurately compare slice sizes), differences between values are small, you want to compare across time or categories. A horizontal bar chart is almost always clearer than a pie.",code:"# Prefer this for 6+ categories:\nplt.barh(categories, values, color='steelblue')\nplt.xlabel('Value')\n\n# Pie OK for 2-4 segments, clear part-to-whole:\nplt.pie([60, 25, 15], labels=['A','B','C'],\n        autopct='%1.1f%%', startangle=90)"},
+     {q:"How do I access individual Axes in a subplots grid?",a:"plt.subplots(2,3) returns a 2D numpy array of Axes objects. Access each with axes[row, col]. For a single row: it's 1D, use axes[col]. Use ax.set_title(), ax.plot() etc. — not plt.title() or plt.plot() inside subplot loops.",code:"fig, axes = plt.subplots(2, 2, figsize=(12, 8))\naxes[0,0].plot(x, y1, color='steelblue')\naxes[0,0].set_title('Revenue Trend')\naxes[0,1].bar(cats, vals, color='coral')\naxes[1,0].hist(data, bins=15)\naxes[1,1].scatter(a, b, alpha=0.5)\nfig.suptitle('Sales Dashboard', fontsize=16)\nplt.tight_layout()"}
+   ],
+   assignment:{title:"4-Chart Analytics Dashboard",desc:"Build a complete analyst dashboard in one figure.",tasks:["2x2 subplot figure, figsize=(14,10), plt.style.use('seaborn-v0_8')","axes[0,0] — Line: monthly revenue with average reference line (axhline) and peak annotation","axes[0,1] — Horizontal bar: revenue by product category, sorted by value","axes[1,0] — Histogram: distribution of order values, bins=20, with mean and median axvlines","axes[1,1] — Scatter: order_value vs quantity, alpha=0.4, coloured by category (use a colour map)","fig.suptitle with current date, tight_layout(), save PNG at 150 dpi","Add a plt.colorbar() to the scatter plot"]}
+  },
+  {id:"m18",num:"18",title:"Pandas Foundations",subtitle:"Intro, Series, DataFrames, Reading Data",track:"pd",
+   topics:["Series: 1D labelled array — one column with index","DataFrame: 2D labelled table","Index: row labels, default 0,1,2...","Creating from dict, list, NumPy array","df.shape, ndim, size, dtypes, columns, index","df.head(n), tail(n), sample(n)","df.info() — structure and nulls","df.describe() — statistics, include='all'","pd.read_csv() — key params: sep, header, index_col, usecols, nrows, skiprows, encoding","pd.read_json() from file or URL","pd.read_excel() — sheet_name","df.to_csv(index=False), to_json(), to_excel()"],
+   qna:[
+     {q:"What is the pandas Index and why does it matter?",a:"The index labels each row — like a spreadsheet row number but can be any value. Default is 0,1,2... You can set a column as index with set_index(). This controls how loc[] looks up rows and how merge() and concat() align data.",code:"df = pd.read_csv('students.csv')\ndf.set_index('student_id', inplace=True)\n\n# Now loc uses student_id:\ndf.loc['STU001']         # one student\ndf.loc['STU001':'STU005'] # range by ID\n\n# Reset to numeric index:\ndf.reset_index(inplace=True)"},
+     {q:"df.info() vs df.describe() — which tells me what?",a:"info() is structural: column names, dtypes, non-null counts, memory. Answers: are there nulls? are dtypes correct? describe() is statistical: mean, std, min, max, percentiles. Answers: what do the values look like? Always run BOTH after loading data.",code:"df.info()\n# RangeIndex: 1000 entries\n# marks    1000 non-null float64  ← no nulls\n# city      987 non-null object   ← 13 nulls!\n\ndf.describe()\n# marks: mean=65.3, std=14.8, min=12, max=100\n\ndf.describe(include='all')  # includes text columns too"},
+     {q:"How do I read only certain columns from a large CSV?",a:"Use usecols= to load only the columns you need. Combined with nrows= for quick previewing, this is essential for large files — saves memory and time.",code:"# Preview structure first:\ndf_preview = pd.read_csv('big_file.csv', nrows=5)\nprint(df_preview.columns.tolist())\n\n# Load only what you need:\ndf = pd.read_csv('big_file.csv',\n    usecols=['date', 'product', 'revenue', 'profit'],\n    encoding='utf-8')"},
+     {q:"Series vs DataFrame — when does each appear?",a:"df['marks'] returns a Series — one column. df[['name','marks']] returns a DataFrame — multiple columns. Functions like groupby().agg() return DataFrames. value_counts() returns a Series. Knowing which you have determines what operations are available.",code:"s = df['marks']       # Series\nprint(type(s))        # pandas.core.series.Series\nprint(s.mean())       # works on Series\n\ndf2 = df[['name','marks']]  # DataFrame (double [[]])\nprint(type(df2))      # pandas.core.frame.DataFrame"}
+   ],
+   assignment:{title:"Data Explorer",desc:"Thoroughly explore a real dataset using all pandas loading and inspection methods.",tasks:["Load Superstore Sales or Student Performance dataset from Kaggle","Run: .shape, .dtypes, .info(), .describe(include='all'), .sample(10)","Count and percentage of nulls per column: df.isnull().sum() / len(df) * 100","Identify: numeric columns, categorical columns, datetime-like columns (by dtype)","Load using usecols — choose only 4 relevant columns, verify shape","Export first 100 rows to new CSV, reload it and verify it matches","Find: which column has the most unique values? (df.nunique())"]}
+  },
+  {id:"m19",num:"19",title:"Pandas Filtering & Selection",subtitle:"Analyzing Data, loc, iloc, Boolean filters, value_counts",track:"pd",
+   topics:["df['col'] for single column (Series)","df[['c1','c2']] for multiple columns (DataFrame)","loc[row_label, col_label] — label-based","iloc[row_int, col_int] — position-based","Boolean filter: df[df['marks'] > 60]","Multiple conditions: & and | (NOT 'and'/'or')","Parentheses REQUIRED: (cond1) & (cond2)","~ for NOT in pandas","query() for readable SQL-like filters","isin() — check against a list of values","between() — inclusive range filter","nlargest(n), nsmallest(n)","value_counts() and value_counts(normalise=True)"],
+   qna:[
+     {q:"Why & instead of 'and' for pandas filters?",a:"Python's 'and' works on single True/False values. & is a bitwise operator that works element-wise on Series (column by column). pandas requires & for combining boolean columns. Also: parentheses around each condition are REQUIRED.",code:"# WRONG — Python 'and' can't compare Series:\ndf[df['age'] > 20 and df['city'] == 'Mumbai']  # ValueError!\n\n# CORRECT — & works element-wise:\ndf[(df['age'] > 20) & (df['city'] == 'Mumbai')]  # ✓\n\n# WRONG — no parentheses causes wrong precedence:\ndf[df['age'] > 20 & df['city'] == 'Mumbai']  # buggy!"},
+     {q:"loc vs iloc — give me a clear example with a non-default index?",a:"When the index is not 0,1,2... the difference is obvious. loc uses the actual index labels. iloc always uses 0,1,2... positions regardless.",code:"df = pd.DataFrame({'name':['A','B','C'],'marks':[88,72,95]},\n                   index=['S01','S02','S03'])\n\ndf.loc['S01']         # row with label 'S01' → A, 88\ndf.iloc[0]            # first row by position → also A, 88\n\ndf.loc['S02','marks'] # row 'S02', column 'marks' → 72\ndf.iloc[1, 1]         # position row 1, col 1 → also 72"},
+     {q:"What is value_counts() and why is it the most used EDA function?",a:"value_counts() counts occurrences of each unique value in a column. Instant distribution summary for any categorical column. With normalise=True shows proportions. Returns a Series sorted by count descending.",code:"df['city'].value_counts()\n# Mumbai    245\n# Delhi     189\n# Pune       87\n\ndf['city'].value_counts(normalise=True).head(5)\n# Mumbai    0.245\n# Delhi     0.189\n\ndf['grade'].value_counts().plot.bar()  # quick chart"},
+     {q:"What does query() do and when is it better than boolean indexing?",a:"query() accepts a SQL-like string expression. Better than long boolean chains for complex conditions. You can reference external variables with @varname. Less typing, more readable.",code:"threshold = 60\ncity = 'Mumbai'\n\n# Boolean indexing:\ndf[(df['marks'] > threshold) & (df['city'] == city)]\n\n# query() — more readable:\ndf.query('marks > @threshold and city == @city')\n\n# Even cleaner for complex:\ndf.query('marks > 60 and city in [\"Mumbai\",\"Pune\"] and age < 25')"}
+   ],
+   assignment:{title:"Data Detective",desc:"Answer 8 specific business questions using only selection and filtering.",tasks:["Find all students from the top-3 cities (by student count) with marks above class average","Use isin() to filter students from a list of specific cities","Use between() to find marks in the 60-80 range — then check their city distribution","nlargest(10) by marks — are any cities overrepresented? (use value_counts on the result)","~ (NOT) operator: find students who are NOT from top-3 cities","query(): marks > 70 AND attendance > 80 AND city is in a list — one readable line","Combine loc and boolean: rows 50-100 WHERE marks > 70 — use loc with boolean on one axis","value_counts(normalise=True) on 3 categorical columns — which has the highest 'other' share?"]}
+  },
+  {id:"m20",num:"20",title:"Pandas Data Cleaning",subtitle:"Cleaning Empty Cells, Wrong Format, Wrong Data, Removing Duplicates",track:"pd",
+   topics:["df.isnull() and notnull() — element-wise","isnull().sum() — null count per column","isnull().sum() / len(df) — null percentage","dropna(): how='any'/'all', subset=, thresh=","fillna(): scalar, column mean/median/mode, ffill, bfill","pd.to_numeric(errors='coerce') — key for dirty data","pd.to_datetime(errors='coerce') — parse dates","df.str.strip(), lower(), upper(), replace()","Column name normalisation","clip() — bounding outliers to valid range","duplicated() — show duplicate rows","drop_duplicates(): keep, subset parameters","replace() for value mapping","Document every cleaning decision with comments"],
+   qna:[
+     {q:"When should I drop vs fill missing values?",a:"Fill when: missing is random and you have a good estimate (median for skewed numeric, mode for categorical, ffill/bfill for time series). Drop when: the key identifier is missing (no student ID = useless row), or when less than 5% of rows are affected.",code:"# Fill numeric — use median (robust to outliers):\ndf['marks'].fillna(df['marks'].median(), inplace=True)\n\n# Fill categorical — use mode (most common):\ndf['city'].fillna(df['city'].mode()[0], inplace=True)\n\n# Fill time series — forward fill:\ndf['temperature'].fillna(method='ffill', inplace=True)\n\n# Drop only if key field is null:\ndf.dropna(subset=['student_id'], inplace=True)"},
+     {q:"What does errors='coerce' do in pd.to_numeric()?",a:"Without errors='coerce', ONE non-numeric value in the column raises an error and the entire conversion fails. With errors='coerce', any value that can't be converted becomes NaN instead. You can then handle those NaN values separately.",code:"# Without coerce — ONE bad value crashes everything:\ndf['marks'] = pd.to_numeric(df['marks'])  # ValueError if 'N/A' exists\n\n# With coerce — bad values become NaN:\ndf['marks'] = pd.to_numeric(df['marks'], errors='coerce')\n# 'N/A' → NaN, '88' → 88.0\nprint(f'{df[\"marks\"].isnull().sum()} values became NaN')"},
+     {q:"How do I clean all column names in one line?",a:"Chain string methods on df.columns. Strip whitespace, convert to lowercase, replace spaces with underscores, remove special characters.",code:"df.columns = (\n    df.columns\n    .str.strip()                         # remove surrounding spaces\n    .str.lower()                         # all lowercase\n    .str.replace(' ', '_', regex=False)  # spaces to underscores\n    .str.replace('[^a-z0-9_]', '', regex=True)  # remove special chars\n)\nprint(df.columns.tolist())"},
+     {q:"drop_duplicates() — which row is kept and how do I control it?",a:"Default keeps='first' — the first occurrence is kept. Use keep='last' for the last, keep=False to remove ALL duplicates. Use subset= to check duplicates on specific columns only (e.g. same email from different devices).",code:"# Remove full-row duplicates:\ndf.drop_duplicates(inplace=True)\n\n# By email only (keep first):\ndf.drop_duplicates(subset=['email'], keep='first')\n\n# See what would be dropped:\nduplicates = df[df.duplicated(subset=['email'], keep=False)]\nprint(f'{len(duplicates)} duplicate rows found')"}
+   ],
+   assignment:{title:"Full Cleaning Pipeline",desc:"Transform a deliberately messy dataset into a clean, analysis-ready version.",tasks:["Create synthetic messy data: 500 rows, 20% nulls, mixed dtype columns, 50 duplicates, marks with negatives and values > 100","Step 1: Print before stats: shape, null counts, dtypes","Step 2: Normalise column names (lowercase, underscores)","Step 3: Fix dtypes — to_numeric and to_datetime with errors='coerce'","Step 4: Handle nulls — different strategy per column with comment explaining the decision","Step 5: Fix wrong data — clip marks to 0-100, replace negative ages with NaN then fill with median","Step 6: Remove duplicates — by full row, then check by email alone","Print after stats: shape, null counts. Final assertion: df.isnull().sum().sum() == 0"]}
+  },
+  {id:"m21",num:"21",title:"Pandas Analysis",subtitle:"GroupBy, Sort, Merge, Correlations, Pandas Plotting",track:"pd",
+   topics:["sort_values() single and multiple columns, ascending list","GroupBy mental model: Split → Apply → Combine","groupby().agg() with list of functions","Named aggregations: new= ('col', 'func')","transform() vs agg() — critical difference","pd.merge(): inner, left, right, outer joins","on=, left_on=, right_on= parameters","pd.concat() for stacking rows","apply() for custom transformations","pd.cut() — bin by edges, pd.qcut() — bin by quantiles","df.corr() — correlation matrix","Seaborn heatmap for correlation visualisation","df.plot() — pandas built-in quick charts"],
+   qna:[
+     {q:"GroupBy agg() vs transform() — this confuses everyone?",a:"agg() REDUCES each group to one row — you get a summary table with one row per group value. transform() BROADCASTS group statistics back to every original row, keeping the DataFrame's original shape.",code:"# agg: get one row per department\nsummary = df.groupby('dept')['salary'].agg(\n    avg_salary=('salary','mean'),\n    headcount=('salary','count'))\n# shape: (n_depts, 2) — smaller than original!\n\n# transform: add group info back to every row\ndf['dept_avg'] = df.groupby('dept')['salary'].transform('mean')\n# df still has same number of rows!"},
+     {q:"merge() vs concat() — how do I know which to use?",a:"merge() joins two tables based on matching key values (SQL JOIN). concat() stacks rows or columns without key matching (SQL UNION ALL). Combining different datasets that share IDs = merge. Combining same dataset across time periods = concat.",code:"# JOIN — match on product_id:\npd.merge(orders, products, on='product_id', how='left')\n# left join: keep ALL orders, add product info where available\n\n# UNION — stack months together:\npd.concat([jan_df, feb_df, mar_df], ignore_index=True)"},
+     {q:"What does a correlation value tell me?",a:"+1.0 = perfect positive relationship (both increase together). -1.0 = perfect negative (one up, other down). 0.0 = no linear relationship. Rule of thumb: |r| > 0.7 strong, 0.4-0.7 moderate, < 0.4 weak. Correlation ≠ causation.",code:"corr = df.select_dtypes(include='number').corr()\n\nimport seaborn as sns\nsns.heatmap(corr, annot=True, cmap='coolwarm',\n            center=0, fmt='.2f')\nplt.title('Feature Correlations')"},
+     {q:"How do I get the top 3 records per group?",a:"Sort first on the metric, then group, then head(N). This is a standard pattern for 'top N per category' queries.",code:"# Top 3 students per city:\ntop3 = (\n    df.sort_values('marks', ascending=False)\n    .groupby('city')\n    .head(3)\n    .sort_values(['city', 'marks'], ascending=[True, False])\n)\nprint(top3[['name', 'city', 'marks']])"}
+   ],
+   assignment:{title:"Full EDA on Real Dataset",desc:"End-to-end exploratory analysis answering 6 business questions.",tasks:["Load Superstore Sales (or similar). Verify it's clean from Module 20.","GroupBy Category: total revenue, avg profit, order count, profit margin % — named aggregations","Find: which Region+Category combination has highest profit? (groupby 2 columns)","Merge with a customer dimension table (create one synthetically if needed) — left join on Customer ID","Add column 'revenue_vs_category_avg': each row's revenue vs its category avg (use transform)","Correlation matrix: which variables correlate most with profit? Seaborn heatmap.","df.plot(): bar chart of category revenue, line chart of monthly trend — in same notebook"]}
+  },
+  {id:"m22",num:"22",title:"Seaborn & Advanced Visualisation",subtitle:"Statistical plots, heatmaps, pairplots, dashboards",track:"mp",
+   topics:["import seaborn as sns","sns.set_style(), set_palette(), set_context()","sns.histplot() with kde=True","sns.kdeplot() — smooth density estimate","sns.boxplot() — IQR, median, outliers","sns.violinplot() — distribution shape","sns.barplot() — with confidence intervals","sns.scatterplot() — hue, size, style parameters","sns.lineplot() — with confidence bands","sns.heatmap() — annot, cmap, center, fmt","sns.pairplot() — all-vs-all relationships","sns.FacetGrid() — small multiples","Combining seaborn + matplotlib for custom charts"],
+   qna:[
+     {q:"seaborn vs matplotlib — when do I use which?",a:"seaborn: built-in grouping (hue), automatic confidence intervals, statistical plots with less code. matplotlib: full control, custom layouts, publication-quality finishing. Use seaborn for exploration and quick insights, matplotlib for final polished outputs.",code:"# Seaborn — built-in grouping:\nsns.barplot(data=df, x='city', y='marks', hue='gender')\n# automatic: CI bars, colors, legend\n\n# Matplotlib — manual control:\nfig, ax = plt.subplots()\nax.bar(x, y, width=0.35, color='steelblue',\n       edgecolor='white', linewidth=0.5)"},
+     {q:"What does a boxplot actually show?",a:"Bottom whisker: minimum (or 1.5×IQR from Q1). Q1: 25th percentile. Box: middle 50% (IQR). Median line: 50th percentile. Q3: 75th percentile. Top whisker: maximum (or 1.5×IQR from Q3). Dots: outliers beyond 1.5×IQR.",code:"sns.boxplot(data=df, x='category', y='revenue')\n# Shows median, spread, outliers per category\n\n# Side-by-side with violin for more detail:\nfig, axes = plt.subplots(1, 2, figsize=(14,5))\nsns.boxplot(data=df, x='cat', y='val', ax=axes[0])\nsns.violinplot(data=df, x='cat', y='val', ax=axes[1])"},
+     {q:"What is a pairplot and when should I use it?",a:"pairplot shows scatter plots for every pair of numeric columns (off-diagonal) and histograms (on-diagonal). One call reveals all pairwise relationships. Use at the start of EDA. Slow for large datasets — sample first.",code:"# Sample first for speed:\nsample = df.sample(500, random_state=42)\n\nsns.pairplot(\n    sample,\n    hue='category',  # color by category\n    corner=True,     # show only lower triangle\n    plot_kws={'alpha': 0.4}\n)"},
+     {q:"What does the hue parameter do in seaborn?",a:"hue splits the data by a categorical column and plots each category in a different color. Automatically adds a legend. Works across most seaborn chart types: bar, scatter, line, hist, box.",code:"# Scatter: color by category\nsns.scatterplot(data=df, x='study_hours', y='marks',\n                hue='city',    # color by city\n                size='age',    # size by age\n                style='gender',# marker shape by gender\n                alpha=0.7)"}
+   ],
+   assignment:{title:"Statistical Visualisation Report",desc:"Build a comprehensive 6-chart visual analysis using seaborn.",tasks:["sns.histplot with kde=True for the main numeric column — identify shape (normal/skewed/bimodal)","sns.boxplot: compare distributions across categories — visually identify which category has most outliers","sns.barplot with hue: compare average marks by city, split by gender — 8 bars in one chart","sns.heatmap: full correlation matrix, annot=True, coolwarm cmap, center=0","sns.pairplot: 4 numeric columns, hue by category, corner=True, alpha=0.3 (sample 500 rows)","FacetGrid: histplot of marks, one panel per city — all same scale for fair comparison","Combine into a 3x2 figure with matplotlib subplots, save as PDF at 200 dpi"]}
+  },
+  {id:"m23",num:"23",title:"Capstone Project",subtitle:"End-to-end data analysis portfolio project",track:"pd",
+   topics:["Project planning: define questions BEFORE coding","Dataset selection: criteria and sources","Data loading and initial exploration","Full cleaning pipeline from scratch","Exploratory analysis: distributions, correlations","GroupBy analyses answering business questions","Merge/join for enriched analysis","Visualisation: matplotlib + seaborn dashboard","Writing insights — sentences not code output","Jupyter notebook structure with markdown cells","sqlite3 for SQL queries (bonus)","Pushing to GitHub as portfolio piece","5-minute presentation structure"],
+   qna:[
+     {q:"How do I choose a good capstone dataset?",a:"Minimum 1000 rows, 5+ columns, has numeric AND categorical columns, at least one date-like column, some messiness (nulls, wrong types). Most importantly: something you find genuinely interesting — you'll spend hours on it.",code:"# Recommended sources:\n# Kaggle.com — search 'data analytics beginner'\n# Good topics:\n#   IPL cricket matches\n#   Zomato restaurant data\n#   Netflix movies/shows\n#   E-commerce orders\n#   COVID-19 India district data\n#   FIFA player stats"},
+     {q:"What makes a good business question?",a:"Specific (not vague), answerable from the data you have, actionable (the answer suggests a decision), and interesting to a potential employer. Bad: 'What are the trends?' Good: 'Which 3 product categories drive 80% of revenue, and which region contributes most to each?'",code:"# WEAK questions:\n# 'Analyse the dataset'\n# 'Show some trends'\n\n# STRONG questions (specific, actionable):\n# Q1: Which city has highest avg marks — is it significant?\n# Q2: Does attendance > 80% guarantee marks > 70?\n# Q3: Which subject shows most improvement over months?\n# Q4: Is there a gender gap in marks across cities?"},
+     {q:"How should I structure my Jupyter notebook?",a:"Clear sections with markdown headers. Each analysis section starts with a markdown cell explaining what you're doing and why. End with a Key Findings cell in plain English — this is what interviewers read.",code:"# Notebook structure:\n## 1. Introduction & Dataset\n## 2. Load & Initial Exploration\n## 3. Data Cleaning\n   # Subsections per issue found\n## 4. Exploratory Analysis\n   ### Q1: [Business question]\n   ### Q2: [Business question]\n   # ... per question\n## 5. Visualisation Dashboard\n## 6. Key Findings & Recommendations"},
+     {q:"How do I talk about this project in an interview?",a:"Use the STAR format: Situation (the data and problem), Task (what you set out to find), Action (your technical approach), Result (what you found and its implications). Lead with the insight, not the technical steps.",code:"# Good interview answer:\n# 'I analysed 50,000 e-commerce orders from 2023.\n#  I cleaned the data (handled 15% nulls, fixed dtypes),\n#  then ran GroupBy analysis to find that Electronics\n#  had the highest revenue but Clothing had a 3x higher\n#  return rate — suggesting a quality control issue.\n#  I built a seaborn heatmap showing the correlation\n#  between price point and return rate.'"}
+   ],
+   assignment:{title:"Capstone — End-to-End Data Analysis",desc:"Your complete, job-portfolio-ready data analysis project.",tasks:["Choose a real dataset (1000+ rows, 5+ columns, from Kaggle or similar)","Write 5 specific business questions BEFORE writing any code — get teacher approval","Full cleaning: column names, dtypes (to_numeric, to_datetime), nulls (different strategy each), duplicates, outliers","EDA: value_counts on all categoricals, describe() on all numerics, pairplot to spot correlations","Answer all 5 questions: each needs groupby/filter/merge + a printed insight sentence","Build a 2x3 dashboard: 6 charts (line, bar, hist, scatter, heatmap, boxplot)","Structure Jupyter notebook with markdown headers and a Key Findings section","Push to GitHub with a README: what's the dataset, what are the questions, what did you find"]}
+  }
+];
+
+// ── STATE ──
+let current = -1;
+let checked = JSON.parse(localStorage.getItem('pda_checked2') || '{}');
+
+function save() { localStorage.setItem('pda_checked2', JSON.stringify(checked)); }
+
+function totalTopics() {
+  return MODULES.reduce((a,m) => a + m.topics.length, 0);
+}
+function doneTopics() {
+  return Object.values(checked).filter(Boolean).length;
+}
+function moduleDone(m) {
+  return m.topics.every((_,i) => checked[`${m.id}-${i}`]);
+}
+
+// ── SIDEBAR ──
+function buildSidebar() {
+  const done = doneTopics(), total = totalTopics();
+  const pct = Math.round(done/total*100);
+  document.getElementById('done-n').textContent = MODULES.filter(moduleDone).length;
+  document.getElementById('pct-n').textContent = pct + '%';
+  document.getElementById('prog-label').textContent = `${done} / ${total} topics`;
+  document.getElementById('prog-fill').style.width = pct + '%';
+
+  const tracks = {py:'Python',np:'NumPy',mp:'Matplotlib',pd:'Pandas'};
+  const groups = {};
+  MODULES.forEach(m => { if(!groups[m.track]) groups[m.track]=[]; groups[m.track].push(m); });
+
+  const nav = document.getElementById('sb-nav');
+  nav.innerHTML = Object.entries(groups).map(([track,mods]) => `
+    <div class="sb-track">${tracks[track]}</div>
+    ${mods.map(m => `
+      <div class="sb-item ${m.id === (current>=0?MODULES[current].id:null) ? 'active' : ''}"
+           onclick="goModule(${MODULES.indexOf(m)})">
+        <span class="sb-item-num">${m.num}</span>
+        <span class="sb-item-label">${m.title}</span>
+        <span class="sb-check ${moduleDone(m)?'done':''}">✓</span>
+      </div>`).join('')}
+  `).join('');
+}
+
+// ── WELCOME ──
+function showWelcome() {
+  document.getElementById('page-welcome').style.display='block';
+  document.getElementById('page-module').style.display='none';
+  current = -1;
+  const done = doneTopics(), total = totalTopics();
+  document.getElementById('page-welcome').innerHTML = `
+    <div class="welcome">
+      <div class="welcome-hero">
+        <div class="welcome-tag">Complete Python Curriculum · 23 Modules</div>
+        <div class="welcome-title">Python for<br>Data Analysts</div>
+        <div class="welcome-desc">From complete Python beginner to job-ready data analyst. Covers Python fundamentals, NumPy, Matplotlib, and Pandas — with Q&A and assignments for every module.</div>
+      </div>
+      <div class="welcome-grid">
+        <div class="track-card tc-py">
+          <div class="tc-title">Python Fundamentals</div>
+          <div class="tc-sub">Modules 01–11 · The complete language</div>
+          <div class="tc-mods">Syntax · Types · Strings · Loops · Functions · OOP · Modules · RegEx</div>
+        </div>
+        <div class="track-card tc-np">
+          <div class="tc-title">NumPy</div>
+          <div class="tc-sub">Modules 12–15 · Numerical computing</div>
+          <div class="tc-mods">Arrays · Indexing · Reshape · Random · Distributions · ufuncs</div>
+        </div>
+        <div class="track-card tc-mp">
+          <div class="tc-title">Matplotlib</div>
+          <div class="tc-sub">Modules 16–17 · Visualisation</div>
+          <div class="tc-mods">Line · Bar · Scatter · Histogram · Pie · Subplots · Dashboards</div>
+        </div>
+        <div class="track-card tc-pd">
+          <div class="tc-title">Pandas + Seaborn</div>
+          <div class="tc-sub">Modules 18–23 · Data analysis</div>
+          <div class="tc-mods">DataFrames · Cleaning · GroupBy · Merge · Seaborn · Capstone</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:16px;margin-bottom:24px">
+        <div style="flex:1;height:6px;background:#f0ede8;border-radius:3px;overflow:hidden">
+          <div style="height:100%;width:${Math.round(done/total*100)}%;background:linear-gradient(90deg,#2563eb,#16a34a,#7c3aed);border-radius:3px;transition:width .4s"></div>
+        </div>
+        <span style="font-size:12px;color:var(--ink3);white-space:nowrap;font-family:var(--mono)">${done}/${total} topics</span>
+      </div>
+      <button class="start-btn" onclick="goModule(0)">Start with Module 01 →</button>
+    </div>`;
+  buildSidebar();
+}
+
+// ── MODULE PAGE ──
+function goModule(idx) {
+  current = idx;
+  const m = MODULES[idx];
+  document.getElementById('page-welcome').style.display='none';
+  document.getElementById('page-module').style.display='block';
+
+  const trackColor = {py:'var(--py)',np:'var(--np)',mp:'var(--mp)',pd:'var(--pd)'}[m.track];
+  const trackName = {py:'Python',np:'NumPy',mp:'Matplotlib',pd:'Pandas'}[m.track];
+
+  document.getElementById('page-module').innerHTML = `
+    <div class="pg-header">
+      <div class="pg-eyebrow">
+        <span class="pg-track-badge badge-${m.track}">${trackName}</span>
+        <span class="pg-num">Module ${m.num} of ${MODULES.length}</span>
+      </div>
+      <div class="pg-title">${m.title}</div>
+      <div class="pg-subtitle">${m.subtitle}</div>
+      <div class="pg-divider"></div>
+    </div>
+
+    <div class="tab-row">
+      <button class="tab-btn active" onclick="setTab(this,'tab-topics')">Topics</button>
+      <button class="tab-btn" onclick="setTab(this,'tab-qna')">Q&A</button>
+      <button class="tab-btn" onclick="setTab(this,'tab-assign')">Assignment</button>
+    </div>
+
+    <div class="tab-content active" id="tab-topics">${buildTopics(m)}</div>
+    <div class="tab-content" id="tab-qna">${buildQnA(m)}</div>
+    <div class="tab-content" id="tab-assign">${buildAssign(m)}</div>
+
+    <div class="pg-nav">
+      <button class="nav-btn" onclick="${idx>0?`goModule(${idx-1})`:'showWelcome()'}" ${idx===0?'':''}>
+        ← ${idx>0?MODULES[idx-1].title:'Home'}
+      </button>
+      <span class="pg-pos">${idx+1} / ${MODULES.length}</span>
+      <button class="nav-btn primary" onclick="${idx<MODULES.length-1?`goModule(${idx+1})`:'showWelcome()'}" ${idx===MODULES.length-1?'disabled':''}>
+        ${idx<MODULES.length-1?MODULES[idx+1].title:'Finish'} →
+      </button>
+    </div>
+  `;
+
+  buildSidebar();
+  document.getElementById('main-content').scrollTop = 0;
+}
+
+function buildTopics(m) {
+  const done = m.topics.filter((_,i) => checked[`${m.id}-${i}`]).length;
+  return `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <span style="font-size:12px;color:var(--ink3)">${done}/${m.topics.length} topics covered</span>
+      <button onclick="markAllDone('${m.id}',${m.topics.length})" style="font-size:11px;padding:4px 12px;border-radius:6px;border:1px solid var(--border2);background:var(--surface);cursor:pointer;font-family:var(--font)">Mark all done</button>
+    </div>
+    <div class="topic-grid">
+      ${m.topics.map((t,i) => {
+        const k=`${m.id}-${i}`, done=checked[k];
+        return `<div class="topic-item" onclick="toggleTopic('${m.id}',${i})">
+          <div class="topic-cb ${done?'done':''}">✓</div>
+          <span class="topic-txt ${done?'done':''}">${t}</span>
+        </div>`;
+      }).join('')}
+    </div>`;
+}
+
+function buildQnA(m) {
+  return `<div class="qna-list">${m.qna.map((q,i) => `
+    <div class="qna-item">
+      <div class="qna-q">
+        <span class="qna-q-tag">Q${i+1}</span>
+        <span class="qna-q-text">${q.q}</span>
+      </div>
+      <div class="qna-a">${q.a}</div>
+      ${q.code?`<pre class="qna-code">${q.code.replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/(#[^\n]*)/g,'<span class="code-comment">$1</span>')}</pre>`:''}
+    </div>`).join('')}</div>`;
+}
+
+function buildAssign(m) {
+  return `<div class="assign-card">
+    <div class="assign-eyebrow">Module ${m.num} Assignment</div>
+    <div class="assign-title">${m.assignment.title}</div>
+    <div class="assign-desc">${m.assignment.desc}</div>
+    <ul class="assign-tasks">
+      ${m.assignment.tasks.map((t,i) => `
+        <li class="assign-task">
+          <span class="assign-task-n">${String(i+1).padStart(2,'0')}.</span>
+          ${t}
+        </li>`).join('')}
+    </ul>
+  </div>`;
+}
+
+// ── INTERACTIONS ──
+function setTab(btn, id) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(id).classList.add('active');
+}
+
+function toggleTopic(moduleId, idx) {
+  const k = `${moduleId}-${idx}`;
+  checked[k] = !checked[k];
+  save();
+  if(current >= 0) goModule(current);
+  else buildSidebar();
+}
+
+function markAllDone(moduleId, count) {
+  for(let i=0;i<count;i++) checked[`${moduleId}-${i}`] = true;
+  save();
+  if(current >= 0) goModule(current);
+}
+
+// ── INIT ──
+showWelcome();
+</script>
+</body>
+</html>

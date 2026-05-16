@@ -1,6 +1,13 @@
 # ===============================
 # 1. CREATING LISTS
 # ===============================
+"""
+Exercise
+Top students finder: given lists of student names and marks, 
+print all students with marks, find who scored highest using index(), 
+create a "passed" list with only marks >= 60, 
+print top 3 using sorted() and slicing.
+"""
 
 prices = [100, 200, 300]
 names = ["Rahul", "Aman", "Sara"]

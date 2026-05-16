@@ -1,3 +1,12 @@
+"""
+ marks loop program
+Write a program that collects student names and marks from user input (stop when they type "done"), then prints total students, average, highest, lowest, and lists who passed and who failed.
+01. Use a while True loop with break to collect input
+02. Store names and marks as separate lists (or one list of pairs)
+03. Use a for loop with enumerate to process results
+04. Format all output cleanly with f-strings
+05. Bonus: add input validation so marks must be 0–100
+"""
 age = int(input("Enter your age: "))
 marks = float(input("Enter your percentage: "))
 experience = int(input("Enter years of experience: "))

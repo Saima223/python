@@ -1,4 +1,12 @@
-
+"""
+Complete program using lists, dicts, loops, comprehensions, and conditions. Closest to real analyst work so far.
+01. Collect N students (name + marks) via input(), store as list of dicts
+02. Compute stats: average, highest, lowest — using list comprehensions
+03. Sort by marks, assign grades, print formatted table with ranks
+04. Show pass/fail counts and pass percentage
+05. Bonus: group by grade and show count per grade
+06. Bonus: search for a student by name and show their rank
+"""
 # 1. Collect N students
 students = []
 n = int(input("Enter number of students: "))

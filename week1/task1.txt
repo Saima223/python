@@ -1,0 +1,8 @@
+Hello Data World
+Write a Python script that introduces yourself as a data analyst.
+01. Create 5 variables: name (str), age (int), city (str), experience (float), is_employed (bool)
+02. Print a formatted introduction card using each variable
+03. Add a triple-quote docstring at the top describing the script's purpose
+04. Use multiple assignment: track, level = 'Data Analytics', 'Beginner'
+05. Print type() and id() of each variable in a loop
+06. Demonstrate that two variables assigned the same string literal share an id (small string interning)
